@@ -105,7 +105,7 @@ contentView.append(
 );
 
 drawer.append(
-  <TextView>Hello, World! You've found me!</TextView>
+  <TextView centerY left={16}>Hello, World! You've found me!</TextView>
 );
 
 const pageRef = $(Page).only(); 
