@@ -8,12 +8,12 @@ var mainContentHeightLandscapeInt;
 var defaultButtonColor = new Button().textColor;
 
 if(device.orientation == 'portrait-primary' || device.orientation == 'portrait-secondary') {
-  mainContentHeightPortraitInt = (device.screenHeight - 120);
-  mainContentHeightLandscapeInt = (device.screenWidth - 85);
+  mainContentHeightPortraitInt = (device.screenHeight - 50);
+  mainContentHeightLandscapeInt = (device.screenWidth - 35);
   mainContentHeightInt = mainContentHeightPortraitInt;
 } else if(device.orientation == 'landscape-primary' || device.orientation == 'landscape-secondary') {
-  mainContentHeightLandscapeInt = (device.screenHeight - 85);
-  mainContentHeightPortraitInt = (device.screenWidth - 120);
+  mainContentHeightLandscapeInt = (device.screenHeight - 35);
+  mainContentHeightPortraitInt = (device.screenWidth - 50);
   mainContentHeightInt = mainContentHeightLandscapeInt;
 }
 
@@ -26,16 +26,6 @@ export class CreateEventPage extends Page {
         <ImageView centerX centerY width={800} height={1000} opacity={.7}
         image={'images/mountain2.jpeg'}
         scaleMode='fill' />
-
-        
-    );
-    this.append(
-      <TabFolder paging stretch tabBarLocation='bottom'>
-          <Tab title='Events' id='events' badge={0}></Tab>
-          <Tab title='Calendar'></Tab>
-          <Tab title='My Calendar'></Tab>
-          <Tab title='My Account'></Tab>
-        </TabFolder>
     );
     this.append(
       <TabFolder id='mainContent' stretchX height={mainContentHeightInt} tabBarLocation='hidden'>
