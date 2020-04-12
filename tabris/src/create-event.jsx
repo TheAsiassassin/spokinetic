@@ -19,25 +19,26 @@ if(device.orientation == 'portrait-primary' || device.orientation == 'portrait-s
 
 device.onOrientationChanged(changeContentHeight);
 
-contentView.append(
-  <$>
-    <NavigationView stretch drawerActionVisible='true'>
-      <SearchAction id='search' message='Search'
-        image={'images/magGlass.png'}>
-      </SearchAction>
-      
-      <Page title='Spokinetic'>
+export class CreateEventPage extends Page {
+  constructor(properties) {
+    super();
+    this.set({title: 'Create New Event', ...properties}).append(
         <ImageView centerX centerY width={800} height={1000} opacity={.7}
         image={'images/mountain2.jpeg'}
         scaleMode='fill' />
 
-        <TabFolder paging stretch tabBarLocation='bottom'>
+        
+    );
+    this.append(
+      <TabFolder paging stretch tabBarLocation='bottom'>
           <Tab title='Events' id='events' badge={0}></Tab>
           <Tab title='Calendar'></Tab>
           <Tab title='My Calendar'></Tab>
+          <Tab title='My Account'></Tab>
         </TabFolder>
-
-        <TabFolder id='mainContent' stretchX height={mainContentHeightInt} tabBarLocation='hidden'>
+    );
+    this.append(
+      <TabFolder id='mainContent' stretchX height={mainContentHeightInt} tabBarLocation='hidden'>
           <Tab>
             <ScrollView stretch layout={new StackLayout({spacing: 16, alignment: 'stretchX'})} padding={32}>
               <TextView top='85' left='8' textColor='white'>* All fields required *</TextView>
@@ -52,18 +53,16 @@ contentView.append(
             </ScrollView>
           </Tab>
         </TabFolder>
-
-        <TabFolder stretchX height={100} background='#234' tabBarLocation='hidden'>
-          <Tab>
-            <TextView text='CREATE EVENT' textColor='white' font='40px' centerX centerY />
-          </Tab>
-        </TabFolder>
-
-      </Page>
-      
-    </NavigationView>
-  </$>
-);
+    );
+    this.append(
+      <TabFolder stretchX height={100} background='#234' tabBarLocation='hidden'>
+        <Tab>
+          <TextView text='CREATE EVENT' textColor='white' font='40px' centerX centerY />
+        </Tab>
+      </TabFolder>
+    );
+  }
+}
 
 function changeContentHeight() {
   if(device.orientation == "portrait-primary" || device.orientation == "portrait-secondary") {

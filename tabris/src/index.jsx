@@ -2,7 +2,7 @@ import {Button, TextView, contentView, AlertDialog, TextInput, Row, CollectionVi
         TabFolder, Tab, ImageView, Stack, Page, NavigationView, ListView, Cell, Action, 
         SearchAction, ScrollView, Composite, drawer
       } from 'tabris';
-
+import {CreateEventPage} from './create-event';
 
 /*
 * Do a method call to initialize these variables eventually
@@ -95,6 +95,9 @@ contentView.append(
             />
             <Button style='flat' text={pThreeString} background='#CD5C5C'opacity={.8}></Button>
           </Tab>
+          <Tab>
+            <Button center onSelect={() => openCreatePage()}>Create new event</Button>
+          </Tab>
         </TabFolder>
 
 
@@ -111,6 +114,11 @@ drawer.append(
 const pageRef = $(Page).only(); 
 //  '$'  is equivalent to 'tabris.contentView.find'  
 
+function openCreatePage() {
+  $(NavigationView).only().append(
+    <CreateEventPage />
+  );
+}
 
 function onHome(){
   pageRef.find('#initText').first(TextView).text = 'Home Pressed';
