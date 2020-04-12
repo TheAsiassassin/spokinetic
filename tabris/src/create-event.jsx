@@ -22,7 +22,7 @@ device.onOrientationChanged(changeContentHeight);
 export class CreateEventPage extends Page {
   constructor(properties) {
     super();
-    this.set({title: 'Create New Event', ...properties}).append(
+    this.set({title: 'Spokinetic', ...properties}).append(
         <ImageView centerX centerY width={800} height={1000} opacity={.7}
         image={'images/mountain2.jpeg'}
         scaleMode='fill' />

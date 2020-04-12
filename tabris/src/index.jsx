@@ -1,6 +1,6 @@
 import {Button, TextView, contentView, AlertDialog, TextInput, Row, CollectionView, 
         TabFolder, Tab, ImageView, Stack, Page, NavigationView, ListView, Cell, Action, 
-        SearchAction, ScrollView, Composite, drawer
+        SearchAction, ScrollView, Composite, drawer, Popover, StackLayout
       } from 'tabris';
 import {CreateEventPage} from './create-event';
 
@@ -9,6 +9,10 @@ import {CreateEventPage} from './create-event';
 * Call will be made to events database to pull top events
 * For now set them to stock images
 */
+
+// Temporary(?) boolean to track for new users
+var signedInBoolean = false;
+
 const bckgndImage = 'images/mountain2.jpeg';
 const magImage = 'images/magGlass.png';
 
@@ -74,7 +78,7 @@ contentView.append(
 
 
         <TabFolder paging stretchX centerY height={300} background='#495764' tabBarLocation='hidden'>
-          <Tab >
+          <Tab>
             <ImageView centerX centerY height={250} scaleMode='fit'
             image={pOneImage} 
             onLoad={handleLoad} 
@@ -111,12 +115,31 @@ drawer.append(
   <TextView centerY left={16}>Hello, World! You've found me!</TextView>
 );
 
+if(!signedInBoolean) {
+  showLanding();
+}
+
 const pageRef = $(Page).only(); 
 //  '$'  is equivalent to 'tabris.contentView.find'  
 
 function openCreatePage() {
   $(NavigationView).only().append(
     <CreateEventPage />
+  );
+}
+
+function showLanding() {
+  const popover = Popover.open(
+    <Popover width={300} height={400}>
+      <ScrollView stretch layout={new StackLayout({spacing: 16, alignment: 'stretchX'})} padding={32}>
+        <Button right background='red' textColor='white' onSelect={() => popover.close()}>X</Button>
+        <TextView centerX top={50} font='bold 36px'>Welcome!</TextView>
+        <TextView centerX font='24px'>All your local events, right</TextView>
+        <TextView centerX top={5} font='24px'>in the palm of your hand</TextView>
+        <Button style='flat' centerX background='blue' textColor='white'>Get Started</Button>
+        <Button style='outline' centerX strokeColor='blue' textColor='blue'>Sign in</Button>
+      </ScrollView>
+    </Popover>
   );
 }
 
