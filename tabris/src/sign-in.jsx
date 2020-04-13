@@ -16,47 +16,34 @@ if(device.orientation == 'portrait-primary' || device.orientation == 'portrait-s
 
 device.onOrientationChanged(changeContentHeight);
 
-contentView.append(
-  <$>
-    <NavigationView stretch drawerActionVisible='true'>
-      <SearchAction id='search' message='Search'
-        image={'images/magGlass.png'}>
-      </SearchAction>
-
-      
-      <Page title='Spokinetic'>
-        <ImageView centerX centerY width={800} height={1000} opacity={.7}
+export class SignInPage extends Page {
+  constructor(properties) {
+    super();
+    this.set({...properties}).append(
+      <ImageView centerX centerY width={800} height={1000} opacity={.7}
         image={'images/mountain2.jpeg'}
         scaleMode='fill' />
-
-        <TabFolder paging stretch tabBarLocation='bottom'>
-          <Tab title='Events' id='events' badge={0}></Tab>
-          <Tab title='Calendar'></Tab>
-          <Tab title='My Calendar'></Tab>
-        </TabFolder>
-
-        <TabFolder id='mainContent' stretchX height={mainContentHeightInt} tabBarLocation='hidden'>
-          <Tab>
-            <ScrollView stretch layout={new StackLayout({spacing: 12, alignment: 'stretchX'})} padding={32}>  
-              <TextInput id='username' top='85' message="Username"/>
-              <TextInput id='password' type='password' message="Password"/>
-              <Button centerX onTap={signIn}>Submit</Button>
-            </ScrollView>
-          </Tab>
-        </TabFolder>
-
-        <TabFolder paging stretchX height={100} background='#234' tabBarLocation='hidden'>
-          <Tab>
-            <TextView text='SIGN IN' textColor='white' font='40px' centerX centerY />
-          </Tab>
-        </TabFolder>
-
-        
-      </Page>
-      
-    </NavigationView>
-  </$>
-);
+    );
+    this.append(
+      <TabFolder id='mainContent' stretchX height={mainContentHeightInt} tabBarLocation='hidden'>
+        <Tab>
+          <ScrollView stretch layout={new StackLayout({spacing: 12, alignment: 'stretchX'})} padding={32}>  
+            <TextInput id='username' top='85' message="Username"/>
+            <TextInput id='password' type='password' message="Password"/>
+            <Button centerX onTap={signIn}>Submit</Button>
+          </ScrollView>
+        </Tab>
+      </TabFolder>
+    );
+    this.append(
+      <TabFolder paging stretchX height={100} background='#234' tabBarLocation='hidden'>
+        <Tab>
+          <TextView text='SIGN IN' textColor='white' font='40px' centerX centerY />
+        </Tab>
+      </TabFolder>
+    );
+  }
+}
 
 function changeContentHeight() {
   if(device.orientation == "portrait-primary" || device.orientation == "portrait-secondary") {

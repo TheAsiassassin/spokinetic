@@ -3,6 +3,8 @@ import {Button, TextView, contentView, AlertDialog, TextInput, Row, CollectionVi
         SearchAction, ScrollView, Composite, drawer, Popover, StackLayout
       } from 'tabris';
 import {CreateEventPage} from './create-event';
+import {SignUpPage} from './sign-up';
+import {SignInPage} from './sign-in';
 
 /*
 * Do a method call to initialize these variables eventually
@@ -115,12 +117,12 @@ drawer.append(
   <TextView centerY left={16}>Hello, World! You've found me!</TextView>
 );
 
+const pageRef = $(Page).only(); 
+//  '$'  is equivalent to 'tabris.contentView.find'  
+
 if(!signedInBoolean) {
   showLanding();
 }
-
-const pageRef = $(Page).only(); 
-//  '$'  is equivalent to 'tabris.contentView.find'  
 
 function openCreatePage() {
   $(NavigationView).only().append(
@@ -131,15 +133,28 @@ function openCreatePage() {
 function showLanding() {
   const popover = Popover.open(
     <Popover width={300} height={400}>
-      <ScrollView stretch layout={new StackLayout({spacing: 16, alignment: 'stretchX'})} padding={32}>
-        <Button right background='red' textColor='white' onSelect={() => popover.close()}>X</Button>
+      <ScrollView stretch layout={new StackLayout({spacing: 16, alignment: 'stretchX'})} padding={16}>
+        <Button style='outline' right strokeColor='blue' textColor='blue' onSelect={() => showSignIn(popover)}>Sign in</Button>
         <TextView centerX top={50} font='bold 36px'>Welcome!</TextView>
         <TextView centerX font='24px'>All your local events, right</TextView>
         <TextView centerX top={5} font='24px'>in the palm of your hand</TextView>
-        <Button style='flat' centerX background='blue' textColor='white'>Get Started</Button>
-        <Button style='outline' centerX strokeColor='blue' textColor='blue'>Sign in</Button>
+        <Button centerX top={64} style='flat' background='blue' font='bold 24px' textColor='white' onSelect={() => showSignUp(popover)}>Get Started</Button>
       </ScrollView>
     </Popover>
+  );
+}
+
+function showSignUp(popover) {
+  popover.close();
+  $(NavigationView).only().append(
+    <SignUpPage />
+  );
+}
+
+function showSignIn(popover) {
+  popover.close();
+  $(NavigationView).only().append(
+    <SignInPage />
   );
 }
 

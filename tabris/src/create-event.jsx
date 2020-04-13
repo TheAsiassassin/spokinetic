@@ -22,7 +22,7 @@ device.onOrientationChanged(changeContentHeight);
 export class CreateEventPage extends Page {
   constructor(properties) {
     super();
-    this.set({title: 'Spokinetic', ...properties}).append(
+    this.set({title: '', ...properties}).append(
         <ImageView centerX centerY width={800} height={1000} opacity={.7}
         image={'images/mountain2.jpeg'}
         scaleMode='fill' />
@@ -39,7 +39,7 @@ export class CreateEventPage extends Page {
               <TextInput id='location' autoCapitalize='sentence' autoCorrect='true' message='Location'/>
               <Button id='date' onSelect={showDateDialog} text='Date'/>
               <Button id='time' onSelect={showTimeDialog} text='Time'/>
-              <Button centerX onTap={signUp}>Submit</Button>
+              <Button centerX onTap={createEvent}>Submit</Button>
             </ScrollView>
           </Tab>
         </TabFolder>
@@ -179,7 +179,7 @@ function parseTime(rawString) {
 }
 
 // Basic validation for when the submit button is pressed
-function signUp() {
+function createEvent() {
   var promptBoolean = false;
   var field = $(TextInput).only('#title');
 

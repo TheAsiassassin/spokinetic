@@ -1,4 +1,4 @@
-import {Button, ImageView, TextInput, TextView, contentView, device, Page, NavigationView, Percent, Picker, SearchAction, TabFolder, Tab, ScrollView, StackLayout, CheckBox, AlertDialog, Color} from 'tabris';
+import {Button, ImageView, TextInput, TextView, contentView, device, Page, NavigationView, Percent, Picker, SearchAction, TabFolder, Tab, ScrollView, StackLayout, CheckBox, AlertDialog, Color, Composite, Popover} from 'tabris';
 
 const TYPE = ['Personal', 'Group', 'Business'];
 var mainContentHeightInt;
@@ -6,64 +6,53 @@ var mainContentHeightPortraitInt;
 var mainContentHeightLandscapeInt;
 
 if(device.orientation == 'portrait-primary' || device.orientation == 'portrait-secondary') {
-  mainContentHeightPortraitInt = (device.screenHeight - 120);
-  mainContentHeightLandscapeInt = (device.screenWidth - 85);
+  mainContentHeightPortraitInt = (device.screenHeight - 50);
+  mainContentHeightLandscapeInt = (device.screenWidth - 35);
   mainContentHeightInt = mainContentHeightPortraitInt;
 } else if(device.orientation == 'landscape-primary' || device.orientation == 'landscape-secondary') {
-  mainContentHeightLandscapeInt = (device.screenHeight - 85);
-  mainContentHeightPortraitInt = (device.screenWidth - 120);
+  mainContentHeightLandscapeInt = (device.screenHeight - 35);
+  mainContentHeightPortraitInt = (device.screenWidth - 50);
   mainContentHeightInt = mainContentHeightLandscapeInt;
 }
 
 device.onOrientationChanged(changeContentHeight);
 
-contentView.append(
-  <$>
-    <NavigationView stretch drawerActionVisible='true'>
-      <SearchAction id='search' message='Search'
-        image={'images/magGlass.png'}>
-      </SearchAction>
-      
-      <Page title='Spokinetic'>
-        <ImageView centerX centerY width={800} height={1000} opacity={.7}
+export class SignUpPage extends Page {
+  constructor(properties) {
+    super();
+    this.set({...properties}).append(
+      <ImageView centerX centerY width={800} height={1000} opacity={.7}
         image={'images/mountain2.jpeg'}
         scaleMode='fill' />
-
-        <TabFolder paging stretch tabBarLocation='bottom'>
-          <Tab title='Events' id='events' badge={0}></Tab>
-          <Tab title='Calendar'></Tab>
-          <Tab title='My Calendar'></Tab>
-        </TabFolder>
-
-        <TabFolder id='mainContent' stretchX height={mainContentHeightInt} tabBarLocation='hidden'>
-          <Tab>
-            <ScrollView stretch layout={new StackLayout({spacing: 16, alignment: 'stretchX'})} padding={32}>
-              <TextView top='85' left='8' textColor='white'>* indicates a required field</TextView>
-              <TextInput id='email' top='15' message='Email Address*'/>
-              <TextInput id='username' message='Username*'/>
-              <TextInput id='reusername' message='Re-enter Username*'/>
-              <TextInput id='password' type='password' message='Password*'/>
-              <TextView top='5' left='8' font='12px' textColor='white'>Must be at least 8 characters</TextView>
-              <TextInput id='repassword' top='10' type='password' message='Re-enter Password*'/>
-              <Picker id='accountType' background='white' itemCount={TYPE.length} itemText={(index) => TYPE[index]} message='Account Type*'/>
-              <CheckBox id='termsConditions' text='I agree to the Terms and Conditions*' textColor='white'/>
-              <CheckBox id='notifications' text='I would like to receive email notifications (optional)' textColor='white'/>
-              <Button centerX onTap={signUp}>Submit</Button>
-            </ScrollView>
-          </Tab>
-        </TabFolder>
-
-        <TabFolder stretchX height={100} background='#234' tabBarLocation='hidden'>
-          <Tab>
-            <TextView text='SIGN UP' textColor='white' font='40px' centerX centerY />
-          </Tab>
-        </TabFolder>
-
-      </Page>
-      
-    </NavigationView>
-  </$>
-);
+    );
+    this.append(
+      <TabFolder id='mainContent' stretchX height={mainContentHeightInt} tabBarLocation='hidden'>
+        <Tab>
+          <ScrollView stretch layout={new StackLayout({spacing: 16, alignment: 'stretchX'})} padding={32}>
+            <TextView top='85' left='8' textColor='white'>* indicates a required field</TextView>
+            <TextInput id='email' top='15' message='Email Address*'/>
+            <TextInput id='username' message='Username*'/>
+            <TextInput id='reusername' message='Re-enter Username*'/>
+            <TextInput id='password' type='password' message='Password*'/>
+            <TextView top='5' left='8' font='12px' textColor='white'>Must be at least 8 characters</TextView>
+            <TextInput id='repassword' top='10' type='password' message='Re-enter Password*'/>
+            <Picker id='accountType' background='white' itemCount={TYPE.length} itemText={(index) => TYPE[index]} message='Account Type*'/>
+            <CheckBox id='termsConditions' text='I agree to the Terms and Conditions*' textColor='white'/>
+            <CheckBox id='notifications' text='I would like to receive email notifications (optional)' textColor='white'/>
+            <Button centerX onTap={signUp}>Submit</Button>
+          </ScrollView>
+        </Tab>
+      </TabFolder>
+    );
+    this.append(
+      <TabFolder stretchX height={100} background='#234' tabBarLocation='hidden'>
+        <Tab>
+          <TextView text='SIGN UP' textColor='white' font='40px' centerX centerY />
+        </Tab>
+      </TabFolder>
+    );
+  }
+}
 
 function changeContentHeight() {
   if(device.orientation == "portrait-primary" || device.orientation == "portrait-secondary") {
