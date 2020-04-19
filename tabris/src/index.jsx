@@ -29,31 +29,16 @@ var pThreeString = 'Obstacle Courses';
 const searchString = '';
 var eventNotifyInt = 0;
 
-contentView.append(
-  <$>
-    
-
-    <NavigationView stretch drawerActionVisible='true' onSelect={onHome}>
-      
-      <SearchAction  id='search' message='Search'
-      image={magImage}
-      onSelect={onSearch}
-      onInput={handleInput}
-      >
-      </SearchAction>
-      
-
-      <Page title='Spokinetic'>
-
-
-        
-        <ImageView width={800} height={1000} opacity={.7}
+export class MainPage extends Page {
+  constructor(properties) {
+    super();
+    this.set({title: 'Spokinetic', ...properties}).append(
+      <ImageView centerX centerY width={800} height={1000} opacity={.7}
         image={bckgndImage}
-        scaleMode='stretch'/>
-
-  
-
-        <TabFolder paging stretch selectionIndex={0} tabBarLocation='bottom' >
+        scaleMode='stretch' />
+    );
+    this.append(
+      <TabFolder paging stretch selectionIndex={0} tabBarLocation='bottom' >
 
           <Tab title='Events' id='events' 
           badge={eventNotifyInt}
@@ -70,45 +55,54 @@ contentView.append(
           </Tab>
 
         </TabFolder>
-
-        <TabFolder paging stretchX height={100} background='#234' tabBarLocation='hidden'>
-          <Tab>
-            <TextView text='EVENTS' textColor='white' font='40px' centerX centerY>
-            </TextView>
-          </Tab>
-          </TabFolder>
-
-
-        <TabFolder paging stretchX centerY height={300} background='#495764' tabBarLocation='hidden'>
-          <Tab>
-            <ImageView centerX centerY height={250} scaleMode='fit'
+    );
+    this.append(
+      <TabFolder stretchX height={100} background='#234' tabBarLocation='hidden'>
+        <Tab>
+          <TextView text='EVENTS' textColor='white' font='40px' centerX centerY />
+        </Tab>
+      </TabFolder>
+    );
+    this.append(
+      <TabFolder paging stretchX centerY height={300} background='#495764' tabBarLocation='hidden'>
+        <Tab>
+          <ImageView centerX centerY height={250} scaleMode='fit'
             image={pOneImage} 
             onLoad={handleLoad} 
             />
-            <Button style='flat' text={pOneString} background='#CD5C5C' opacity={.8}></Button>
-          </Tab>
-          <Tab>
-            <ImageView centerX centerY height={250} scaleMode='fit'
+          <Button style='flat' text={pOneString} background='#CD5C5C' opacity={.8}></Button>
+        </Tab>
+        <Tab>
+          <ImageView centerX centerY height={250} scaleMode='fit'
             image={pTwoImage} 
             onLoad={handleLoad}
             />
-            <Button style='flat' text={pTwoString} background='#CD5C5C'opacity={.8}></Button>
-          </Tab>
-          <Tab>
-            <ImageView centerX centerY height={250} scaleMode='fit'
+          <Button style='flat' text={pTwoString} background='#CD5C5C'opacity={.8}></Button>
+        </Tab>
+        <Tab>
+          <ImageView centerX centerY height={250} scaleMode='fit'
             image={pThreeImage} 
             onLoad={handleLoad}
             />
-            <Button style='flat' text={pThreeString} background='#CD5C5C'opacity={.8}></Button>
-          </Tab>
-          <Tab>
-            <Button center onSelect={() => openCreatePage()}>Create new event</Button>
-          </Tab>
-        </TabFolder>
+          <Button style='flat' text={pThreeString} background='#CD5C5C'opacity={.8}></Button>
+        </Tab>
+        <Tab>
+          <Button center onSelect={() => openCreatePage()}>Create new event</Button>
+        </Tab>
+      </TabFolder>
+    );
+  }
+}
 
+contentView.append(
+  <$>
+    <NavigationView stretch drawerActionVisible='true' onSelect={onHome}>
+      <SearchAction  id='search' message='Search'
+      image={magImage}
+      onSelect={onSearch}
+      onInput={handleInput} />
 
-      </Page>
-
+      <Page />
     </NavigationView>
   </$>
 );
@@ -146,16 +140,22 @@ function showLanding() {
 
 function showSignUp(popover) {
   popover.close();
-  $(NavigationView).only().append(
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
     <SignUpPage />
   );
+  navigationView.set({toolbarVisible: false});
 }
 
 function showSignIn(popover) {
   popover.close();
-  $(NavigationView).only().append(
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
     <SignInPage />
   );
+  navigationView.set({toolbarVisible: false});
 }
 
 function onHome(){

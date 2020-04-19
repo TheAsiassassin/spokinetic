@@ -1,4 +1,6 @@
 import {Button, ImageView, TextInput, TextView, contentView, device, Page, NavigationView, Percent, SearchAction, TabFolder, Tab, ScrollView, StackLayout, AlertDialog} from 'tabris';
+import {SignUpPage} from './sign-up';
+import {MainPage} from './index';
 
 var mainContentHeightInt;
 var mainContentHeightPortraitInt;
@@ -28,9 +30,10 @@ export class SignInPage extends Page {
       <TabFolder id='mainContent' stretchX height={mainContentHeightInt} tabBarLocation='hidden'>
         <Tab>
           <ScrollView stretch layout={new StackLayout({spacing: 12, alignment: 'stretchX'})} padding={32}>  
-            <TextInput id='username' top='85' message="Username"/>
-            <TextInput id='password' type='password' message="Password"/>
-            <Button centerX onTap={signIn}>Submit</Button>
+            <TextInput id='username' top='135' font='20px' message="Username"/>
+            <TextInput id='password' type='password' font='20px' message="Password"/>
+            <Button centerX font='bold 16px' onTap={signIn}>Submit</Button>
+            <Button top={35} centerX textColor='white' style='text' onTap={showSignUp}>New User? Sign Up Here!</Button>
           </ScrollView>
         </Tab>
       </TabFolder>
@@ -55,11 +58,27 @@ function changeContentHeight() {
   $('#mainContent').set({height: mainContentHeightInt});
 }
 
+function showSignUp() {
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <SignUpPage />
+  );
+}
+
 // Placeholder function for when the submit button is pressed
 function signIn() {
+  /* Placeholder to ensure proper capture of raw data
   const message = `Username: ${$(TextInput).only('#username').text}\n` + 
                   `Password: ${$(TextInput).only('#password').text}\n`;
   AlertDialog.open(
     <AlertDialog title='Sign in?' message={message} buttons={{ok: 'Sign-In', cancel: 'Cancel'}}/>
+  );*/
+
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <MainPage />
   );
+  navigationView.set({toolbarVisible: true});
 }

@@ -1,4 +1,6 @@
 import {Button, ImageView, TextInput, TextView, contentView, device, Page, NavigationView, Percent, Picker, SearchAction, TabFolder, Tab, ScrollView, StackLayout, CheckBox, AlertDialog, Color, Composite, Popover} from 'tabris';
+import {SignInPage} from './sign-in';
+import {MainPage} from './index';
 
 const TYPE = ['Personal', 'Group', 'Business'];
 var mainContentHeightInt;
@@ -29,17 +31,18 @@ export class SignUpPage extends Page {
       <TabFolder id='mainContent' stretchX height={mainContentHeightInt} tabBarLocation='hidden'>
         <Tab>
           <ScrollView stretch layout={new StackLayout({spacing: 16, alignment: 'stretchX'})} padding={32}>
-            <TextView top='85' left='8' textColor='white'>* indicates a required field</TextView>
-            <TextInput id='email' top='15' message='Email Address*'/>
-            <TextInput id='username' message='Username*'/>
-            <TextInput id='reusername' message='Re-enter Username*'/>
-            <TextInput id='password' type='password' message='Password*'/>
-            <TextView top='5' left='8' font='12px' textColor='white'>Must be at least 8 characters</TextView>
-            <TextInput id='repassword' top='10' type='password' message='Re-enter Password*'/>
-            <Picker id='accountType' background='white' itemCount={TYPE.length} itemText={(index) => TYPE[index]} message='Account Type*'/>
-            <CheckBox id='termsConditions' text='I agree to the Terms and Conditions*' textColor='white'/>
-            <CheckBox id='notifications' text='I would like to receive email notifications (optional)' textColor='white'/>
-            <Button centerX onTap={signUp}>Submit</Button>
+            <TextView top='85' left='8' font='16px' textColor='white'>* indicates a required field</TextView>
+            <TextInput id='email' top='15' font='20px' message='Email Address*'/>
+            <TextInput id='username' font='20px' message='Username*'/>
+            <TextInput id='reusername' font='20px' message='Re-enter Username*'/>
+            <TextInput id='password' type='password' font='20px' message='Password*'/>
+            <TextView top='5' left='8' font='16px' textColor='white'>Must be at least 8 characters</TextView>
+            <TextInput id='repassword' top='10' type='password' font='20px' message='Re-enter Password*'/>
+            <Picker id='accountType' background='white' font='20px' itemCount={TYPE.length} itemText={(index) => TYPE[index]} message='Account Type*'/>
+            <CheckBox id='termsConditions' text='I agree to the Terms and Conditions*' font='20px' textColor='white'/>
+            <CheckBox id='notifications' text='I would like to receive email notifications (optional)' font='20px' textColor='white'/>
+            <Button centerX font='bold 16px' onTap={signUp}>Submit</Button>
+            <Button top={35} centerX textColor='white' style='text' onTap={showSignIn}>Already have an account?</Button>
           </ScrollView>
         </Tab>
       </TabFolder>
@@ -62,6 +65,14 @@ function changeContentHeight() {
   }
 
   $('#mainContent').set({height: mainContentHeightInt});
+}
+
+function showSignIn() {
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <SignInPage />
+  );
 }
 
 // Basic validation for when the submit button is pressed
@@ -130,8 +141,15 @@ function signUp() {
       <AlertDialog title='Invalid data' message={'Please correct fields highlighted in red'} buttons={{ok: 'OK'}}/>
     );
   } else {
-    AlertDialog.open(
+    /*AlertDialog.open(
       <AlertDialog title='Sign up?' message={'Are you sure you want to sign up?'} buttons={{ok: 'Yes', cancel: 'No'}}/>
+    );*/
+
+    const navigationView = $(NavigationView).only();
+    navigationView.pages().detach();
+    navigationView.append(
+      <MainPage />
     );
+    navigationView.set({toolbarVisible: true});
   }
 }
