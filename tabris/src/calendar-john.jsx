@@ -1,8 +1,12 @@
 import {TextView, CollectionView, Slider, contentView, Page, TabFolder, Tab, NavigationView} from 'tabris';
 import {MainPage} from './index';
 
+// Array to name months based on the value returned by date.getMonth()
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+// Array to name days of the week based on the value returned by date.getDay()
 //const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
 var date = new Date();
 
 const items = createItems();
@@ -13,7 +17,7 @@ export class CalendarPage extends Page {
     this.set({title: 'Calendar', ...properties}).append(
       <TabFolder paging stretch selectionIndex={1} tabBarLocation='bottom'>
 
-        <Tab title='Events' id='events' onSelect={() => toMainPage()}>
+        <Tab title='Events' id='events' onSelect={() => openMainPage()}>
         </Tab>
 
         <Tab title='Calendar'>
@@ -79,7 +83,7 @@ function createItems() {
   return result;
 }
 
-function toMainPage() {
+function openMainPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
   navigationView.append(

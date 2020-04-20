@@ -43,7 +43,7 @@ export class MainPage extends Page {
     this.append(
       <TabFolder paging stretch selectionIndex={0} tabBarLocation='bottom' >
 
-          <Tab title='Events' id='events' onSelect={() => toMainPage()}>
+          <Tab title='Events' id='events'>
           </Tab>
 
           <Tab title='Calendar' onSelect={() => openCalendarPage()}>
@@ -122,17 +122,16 @@ function checkShowLanding(){
     showLanding();
   }
 }
-/**
- *  Opens a "Create New Event" page
- */
+
+// Opens "Create New Event" page
 function openCreatePage() {
   $(NavigationView).only().append(
     <CreateEventPage />
   );
 }
 
+// Opens a Calendar page
 function openCalendarPage() {
-  //console.log('Open Calendar Page');
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
   navigationView.append(
@@ -140,13 +139,6 @@ function openCalendarPage() {
   );
 }
 
-function toMainPage() {
-  const navigationView = $(NavigationView).only();
-  navigationView.pages().detach();
-  navigationView.append(
-    <MainPage />
-  );
-}
 /**
  * Initial page user sees. Prompts user to sign up.
  * 
