@@ -6,6 +6,7 @@ import {CreateEventPage} from './create-event';
 import {SignUpPage} from './sign-up';
 import {SignInPage} from './sign-in';
 import {EventNotifyPage} from './eventsNotificationPage';
+import {CalendarPage} from './calendar-john';
 
 /**
  * Add In Later Iteration
@@ -42,12 +43,10 @@ export class MainPage extends Page {
     this.append(
       <TabFolder paging stretch selectionIndex={0} tabBarLocation='bottom' >
 
-          <Tab title='Events' id='events' 
-          badge={eventNotifyInt}
-          onSelect={onEvents}>
+          <Tab title='Events' id='events' onSelect={() => toMainPage()}>
           </Tab>
 
-          <Tab title='Calendar'>
+          <Tab title='Calendar' onSelect={() => openCalendarPage()}>
           </Tab>
 
           <Tab title='My Calendar'>
@@ -131,6 +130,23 @@ function openCreatePage() {
     <CreateEventPage />
   );
 }
+
+function openCalendarPage() {
+  //console.log('Open Calendar Page');
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <CalendarPage />
+  );
+}
+
+function toMainPage() {
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <MainPage />
+  );
+}
 /**
  * Initial page user sees. Prompts user to sign up.
  * 
@@ -147,7 +163,7 @@ function showLanding() {
   const popover = Popover.open(
     <Popover stretchX >
   
-        <Stack background='#79a6e1'  stretchX height={550}>
+        <Stack background='#79a6e1' stretchX height={550}>
           <ScrollView top background='#234' stretchX height={72} direction='horizontal' layout={new RowLayout({alignment: 'stretchY'})}>
             <TextView left textColor='white' font='bold 35px'>  Spokinetic    </TextView>
             <Button style='text' textColor='white' left={16} font='bold 14px' onSelect={() => showSignIn(popover)}>SIGN IN</Button>
