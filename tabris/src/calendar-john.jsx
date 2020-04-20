@@ -1,5 +1,6 @@
 import {TextView, CollectionView, Slider, contentView, Page, TabFolder, Tab, NavigationView} from 'tabris';
 import {MainPage} from './index';
+import {AccountPage} from './account';
 
 // Array to name months based on the value returned by date.getMonth()
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -26,7 +27,7 @@ export class CalendarPage extends Page {
         <Tab title='My Calendar'>
         </Tab>
 
-        <Tab title='My Account'>
+        <Tab title='My Account' onSelect={() => openAccountPage()}>
         </Tab>
 
       </TabFolder>
@@ -88,5 +89,13 @@ function openMainPage() {
   navigationView.pages().detach();
   navigationView.append(
     <MainPage />
+  );
+}
+
+function openAccountPage() {
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <AccountPage />
   );
 }

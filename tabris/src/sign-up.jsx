@@ -76,7 +76,7 @@ function showSignIn() {
 }
 
 // Basic validation for when the submit button is pressed
-function signUp() {
+async function signUp() {
   var promptBoolean = false;
   var field = $(TextInput).only('#email');
   var search = field.text.search(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
@@ -141,15 +141,17 @@ function signUp() {
       <AlertDialog title='Invalid data' message={'Please correct fields highlighted in red'} buttons={{ok: 'OK'}}/>
     );
   } else {
-    /*AlertDialog.open(
+    const dialog = AlertDialog.open(
       <AlertDialog title='Sign up?' message={'Are you sure you want to sign up?'} buttons={{ok: 'Yes', cancel: 'No'}}/>
-    );*/
-
-    const navigationView = $(NavigationView).only();
-    navigationView.pages().detach();
-    navigationView.append(
-      <MainPage />
     );
-    navigationView.set({toolbarVisible: true});
+    const {button} = await dialog.onClose.promise();
+    if(button === 'ok') {
+      const navigationView = $(NavigationView).only();
+      navigationView.pages().detach();
+      navigationView.append(
+        <MainPage />
+      );
+      navigationView.set({toolbarVisible: true});
+    }
   }
 }

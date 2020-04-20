@@ -7,6 +7,7 @@ import {SignUpPage} from './sign-up';
 import {SignInPage} from './sign-in';
 import {EventNotifyPage} from './eventsNotificationPage';
 import {CalendarPage} from './calendar-john';
+import {AccountPage} from './account';
 
 /**
  * Add In Later Iteration
@@ -52,7 +53,7 @@ export class MainPage extends Page {
           <Tab title='My Calendar'>
           </Tab>
 
-          <Tab title='My Account'>
+          <Tab title='My Account' onSelect={() => openAccountPage()}>
           </Tab>
 
         </TabFolder>
@@ -139,6 +140,14 @@ function openCalendarPage() {
   );
 }
 
+function openAccountPage() {
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <AccountPage />
+  );
+}
+
 /**
  * Initial page user sees. Prompts user to sign up.
  * 
@@ -153,7 +162,7 @@ function openCalendarPage() {
  */
 function showLanding() {
   const popover = Popover.open(
-    <Popover stretchX >
+    <Popover>
   
         <Stack background='#79a6e1' stretchX height={550}>
           <ScrollView top background='#234' stretchX height={72} direction='horizontal' layout={new RowLayout({alignment: 'stretchY'})}>
