@@ -150,9 +150,9 @@ function showLanding() {
         <Stack background='#79a6e1'  stretchX height={550}>
           <ScrollView top background='#234' stretchX height={72} direction='horizontal' layout={new RowLayout({alignment: 'stretchY'})}>
             <TextView left textColor='white' font='bold 35px'>  Spokinetic    </TextView>
-            <Button style='text' textColor='white' font='bold 14px' onSelect={() => showSignIn(popover)}>SIGN IN</Button>
-            <TextView textColor='white'> | </TextView>
-            <Button style='text' textColor='white' font='bold 14px' onSelect={() => showSignUp(popover)}>SIGN UP</Button>
+            <Button style='text' textColor='white' left={16} font='bold 14px' onSelect={() => showSignIn(popover)}>SIGN IN</Button>
+            {/*<TextView textColor='white'> | </TextView>
+            <Button style='text' textColor='white' font='bold 14px' onSelect={() => showSignUp(popover)}>SIGN UP</Button>*/}
           </ScrollView>
           
           <TextView centerX top={60} textColor='white' font='bold 40px'>Welcome!</TextView>
@@ -162,7 +162,7 @@ function showLanding() {
           onSelect={() => showSignUp(popover)}>Get Started</Button>
         </Stack>
 
-        <TextView bottom centerX textColor='#2f2f2f' font='bold 13px'>James Tollefson | Ian Oleson | John Petrovich | Steven McConnell</TextView>
+        <TextView bottom centerX textColor='#2f2f2f' font='bold 9px'>James Tollefson | Ian Oleson | John Petrovich | Steven McConnell</TextView>
 
     </Popover>
   );
