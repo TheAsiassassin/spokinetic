@@ -8,6 +8,7 @@ import {SignInPage} from './sign-in';
 import {EventNotifyPage} from './eventsNotificationPage';
 import {CalendarPage} from './calendar-john';
 import {AccountPage} from './account';
+import {EventPage} from './eventPage';
 
 /**
  * Add In Later Iteration
@@ -70,7 +71,8 @@ export class MainPage extends Page {
         <Tab>
           <ImageView centerX centerY height={250} scaleMode='fit'
             image={pOneImage} 
-            onLoad={handleLoad} 
+            onLoad={handleLoad}
+            onTap={() => openEventPage()}
             />
           <Button style='flat' text={pOneString} background='#CD5C5C' opacity={.8}></Button>
         </Tab>
@@ -78,6 +80,7 @@ export class MainPage extends Page {
           <ImageView centerX centerY height={250} scaleMode='fit'
             image={pTwoImage} 
             onLoad={handleLoad}
+            onTap={() => openEventPage()}
             />
           <Button style='flat' text={pTwoString} background='#CD5C5C'opacity={.8}></Button>
         </Tab>
@@ -85,6 +88,7 @@ export class MainPage extends Page {
           <ImageView centerX centerY height={250} scaleMode='fit'
             image={pThreeImage} 
             onLoad={handleLoad}
+            onTap={() => openEventPage()}
             />
           <Button style='flat' text={pThreeString} background='#CD5C5C'opacity={.8}></Button>
         </Tab>
@@ -145,6 +149,12 @@ function openAccountPage() {
   navigationView.pages().detach();
   navigationView.append(
     <AccountPage />
+  );
+}
+
+function openEventPage() {
+  $(NavigationView).only().append(
+    <EventPage />
   );
 }
 

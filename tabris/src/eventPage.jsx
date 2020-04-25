@@ -28,103 +28,78 @@ statusBar.set({
   theme: 'dark'
 });*/
 
+export class EventPage extends Page {
+  constructor(properties) {
+    super();
+    this.set({...properties}).append(
+      <ScrollView stretch onResize={updateInitialPosition} onScrollY={updateCurrentPosition}>
 
-contentView.append(
-  <$>
-    
+        <ImageView id='eventImage' stretchX scaleMode='fill' image={eventImage}/>
+        <Composite id='descriptionContainer' stretchX top='next()' height={800} padding={16} background='white'>
+          <TextView id='description' stretchX text={descriptionString}/>
+        </Composite>
+        <Stack stretchX alignment='stretchX' padding={16} background={primaryColor(TITLE_VIEW_OPACITY)}>
+          <TextView id='quickDescription' font='bold 16px' textColor='black' text={quickDescriptionString}/>
+          <TextView id='title' font='medium 24px' textColor='white' text={titleString}/>
+        </Stack>
 
-    <NavigationView stretch drawerActionVisible='true' onSelect={onHome}>
-      
-      <SearchAction  id='search'
-      image={magImage}
-      onSelect={onSearch}
-      onInput={handleInput}
-      >
-      </SearchAction>
-      
-
-      <Page title='Spokinetic'>
-
-
-
-        <ScrollView stretch onResize={updateInitialPosition} onScrollY={updateCurrentPosition}>
-          <ImageView stretchX scaleMode='fill'/>
-          <Composite id='descriptionContainer' stretchX top='next()' height={800} padding={16} background='white'>
-            <TextView id='description' stretchX/>
-          </Composite>
-          <Stack stretchX alignment='stretchX' padding={16} background={primaryColor(TITLE_VIEW_OPACITY)}>
-            <TextView id='quickDescription' font='bold 16px' textColor='black'/>
-            <TextView id='title' font='medium 24px' textColor='white'/>
-          </Stack>
-
-
-          <TabFolder paging stretch selectionIndex={0}  >
-
-            <Tab title='Events' id='events' 
+        <TabFolder paging stretch selectionIndex={0}  >
+          <Tab title='Events' id='events' 
             badge={eventNotifyInt}
-            onSelect={onEvents}>
-            </Tab>
+            onSelect={() => openMainPage()}>
+          </Tab>
 
-            <Tab title='Calendar'>
-            </Tab>
+          <Tab title='Calendar'>
+          </Tab>
 
-            <Tab title='MyCalendar'>
-            </Tab>
+          <Tab title='MyCalendar'>
+          </Tab>
+        </TabFolder>
 
-          </TabFolder>
+        <TabFolder stretch selectionIndex={0} tabBarLocation='bottom'>
+          <Tab title= 'SPOKINETIC'>
+          </Tab>
 
+          <Tab title='CONTACT' id='contact'>
+          </Tab>
 
-          <TabFolder stretch selectionIndex={0} tabBarLocation='bottom'>
+          <Tab title='SHARE'>
+          </Tab>
+        </TabFolder>
 
-            <Tab title= 'SPOKINETIC'>
-            </Tab>
-
-            <Tab title='CONTACT' id='contact'>
-            </Tab>
-
-            <Tab title='SHARE'>
-            </Tab>
-
-          </TabFolder>
-
-        </ScrollView>
-
-      </Page>
-
-    </NavigationView>
-  </$>
-);
+      </ScrollView>
+    );
+  }
+}
 
 //I removed the following line of code to place the tab folders of "EVENTS", "CALENDAR", "MYCALNEDAR" at the
 //top of the screen rather than the bottom. Just a design preference, I'm not sure what is better.
 //tabBarLocation='bottom'
 
-const pageRef = $(Page).only();
+//const imageView = $(ImageView).only();
+//const titleContainer = $(Stack).only();
+//const descriptionContainer = $(Composite).only('#descriptionContainer');
 
-const imageView = $(ImageView).only();
-const titleContainer = $(Stack).only();
-const descriptionContainer = $(Composite).only('#descriptionContainer');
+//const titleView = $(TextView).only('#title');
+//const quickDescriptionView = $(TextView).only('#quickDescription');
+//const descriptionView = $(TextView).only('#description');
 
-const titleView = $(TextView).only('#title');
-const quickDescriptionView = $(TextView).only('#quickDescription');
-const descriptionView = $(TextView).only('#description');
-
-initFields();
+//initFields();
 
 function updateInitialPosition({height}) {
-  imageView.height = height / 2;
-  descriptionContainer.height = height * 1.5;
-  const titleContainerHeight = titleContainer.bounds.height;
+  $(ImageView).only('#eventImage').height = height / 2;
+  $(Composite).only('#descriptionContainer').height = height * 1.5;
+  const titleContainerHeight = $(Stack).only().bounds.height;
   // We need the offset of the title composite in each scroll event.
   // As it can only change on resize, we assign it here.
-  titleContainerY = Math.min(imageView.height - titleContainerHeight, height / 2);
-  titleContainer.top = titleContainerY;
+  titleContainerY = Math.min($(ImageView).only('#eventImage').height - titleContainerHeight, height / 2);
+  $(Stack).only().top = titleContainerY;
 }
 
 function updateCurrentPosition({offset}) {
-  imageView.transform = {translationY: Math.max(0, offset * 0.4)};
-  titleContainer.transform = {translationY: Math.max(0, offset - titleContainerY)};
-  titleContainer.background = primaryColor(calculatetitleContainerOpacity(offset));
+  $(ImageView).only('#eventImage').transform = {translationY: Math.max(0, offset * 0.4)};
+  $(Stack).only().transform = {translationY: Math.max(0, offset - titleContainerY)};
+  $(Stack).only().background = primaryColor(calculatetitleContainerOpacity(offset));
 }
 
 function calculatetitleContainerOpacity(scrollViewOffsetY) {
@@ -138,24 +113,23 @@ function calculatetitleContainerOpacity(scrollViewOffsetY) {
 * display the title, quick description or attention grab phrase, 
 * and the event description that were grabbed from the database.
 */
-function initFields(){
-  titleView.text = titleString;
-  quickDescriptionView.text = quickDescriptionString;
-  descriptionView.text = descriptionString;
-  imageView.image = eventImage;
-}
-
-function onHome(){
-  pageRef.find('#initText').first(TextView).text = 'Home Pressed';
-}
+/*function initFields(){
+  $(TextView).only('#title').text = titleString;
+  $(TextView).only('#quickDescription').text = quickDescriptionString;
+  $(TextView).only('#description').text = descriptionString;
+  $(ImageView).only().image = eventImage;
+}*/
 
 function onSearch(){
 
 }
 
-function onEvents(){
-  eventNotifyInt ++;
-  pageRef.find('#events').first(Tab).badge = eventNotifyInt; // increment badge val
+function openMainPage() {
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <MainPage />
+  );
 }
 
 function handleInput(){
