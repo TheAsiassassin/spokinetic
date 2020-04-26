@@ -1,3 +1,11 @@
+/**
+ * Sign-Up Page
+ * 
+ * TODO:
+ *   Add functionality to follow up on successful submission
+ *     Connect to DB and add record
+ */
+
 import {Button, ImageView, TextInput, TextView, contentView, device, Page, NavigationView, Percent, Picker, SearchAction, TabFolder, Tab, ScrollView, StackLayout, CheckBox, AlertDialog, Color, Composite, Popover} from 'tabris';
 import {SignInPage} from './sign-in';
 import {MainPage} from './index';
@@ -7,6 +15,10 @@ var mainContentHeightInt;
 var mainContentHeightPortraitInt;
 var mainContentHeightLandscapeInt;
 
+/**
+ * Establish viewing size so main content doesn't cover up
+ *   navigation tabs at bottom of app
+ */
 if(device.orientation == 'portrait-primary' || device.orientation == 'portrait-secondary') {
   mainContentHeightPortraitInt = (device.screenHeight - 50);
   mainContentHeightLandscapeInt = (device.screenWidth - 35);
@@ -19,6 +31,11 @@ if(device.orientation == 'portrait-primary' || device.orientation == 'portrait-s
 
 device.onOrientationChanged(changeContentHeight);
 
+/**
+ * Creates a Page object to allow use throughout the project
+ * 
+ * Most useful for connecting pages in the app
+ */
 export class SignUpPage extends Page {
   constructor(properties) {
     super();
@@ -57,6 +74,10 @@ export class SignUpPage extends Page {
   }
 }
 
+/**
+ * Updates main content height when the device is rotated to
+ *   prevent content from covering navigation tabs at bottom
+ */
 function changeContentHeight() {
   if(device.orientation == "portrait-primary" || device.orientation == "portrait-secondary") {
     mainContentHeightInt = mainContentHeightPortraitInt;
@@ -67,6 +88,14 @@ function changeContentHeight() {
   $('#mainContent').set({height: mainContentHeightInt});
 }
 
+/**
+ * Opens a Sign-In page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic', without this call the main app
+ *   can be accessed without an account
+ */
 function showSignIn() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -75,7 +104,16 @@ function showSignIn() {
   );
 }
 
-// Basic validation for when the submit button is pressed
+/**
+ * Provides basic data validation for the fields
+ *   on the page
+ * 
+ * TODO:
+ *   Provide proper follow-up once the data is
+ *     determined to be valid
+ *   Refactor data validation to provide more valid
+ *     checks/make more secure once connected to DB
+ */
 async function signUp() {
   var promptBoolean = false;
   var field = $(TextInput).only('#email');

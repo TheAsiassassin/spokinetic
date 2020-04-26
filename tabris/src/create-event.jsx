@@ -1,3 +1,11 @@
+/**
+ * Create New Event Page
+ * 
+ * TODO:
+ *   Add functionality to follow up on successful submission
+ *     Connect to DB and add record
+ */
+
 import {Button, ImageView, TextInput, TextView, contentView, device, Page, NavigationView, Percent, Picker, SearchAction, TabFolder, Tab, ScrollView, StackLayout, CheckBox, AlertDialog, Color, DateDialog, TimeDialog} from 'tabris';
 
 const TYPE = ['Personal', 'Group', 'Business'];
@@ -7,6 +15,10 @@ var mainContentHeightLandscapeInt;
 
 var defaultButtonColor = new Button().textColor;
 
+/**
+ * Establish viewing size so main content doesn't cover up
+ *   navigation tabs at bottom of app
+ */
 if(device.orientation == 'portrait-primary' || device.orientation == 'portrait-secondary') {
   mainContentHeightPortraitInt = (device.screenHeight - 50);
   mainContentHeightLandscapeInt = (device.screenWidth - 35);
@@ -19,6 +31,11 @@ if(device.orientation == 'portrait-primary' || device.orientation == 'portrait-s
 
 device.onOrientationChanged(changeContentHeight);
 
+/**
+ * Creates a Page object to allow use throughout the project
+ * 
+ * Most useful for connecting pages in the app
+ */
 export class CreateEventPage extends Page {
   constructor(properties) {
     super();
@@ -54,6 +71,10 @@ export class CreateEventPage extends Page {
   }
 }
 
+/**
+ * Updates main content height when the device is rotated to
+ *   prevent content from covering navigation tabs at bottom
+ */
 function changeContentHeight() {
   if(device.orientation == "portrait-primary" || device.orientation == "portrait-secondary") {
     mainContentHeightInt = mainContentHeightPortraitInt;
@@ -64,11 +85,26 @@ function changeContentHeight() {
   $('#mainContent').set({height: mainContentHeightInt});
 }
 
+/**
+ * Displays dialog prompting for a valid date
+ * 
+ * If process is completed, selected date is displayed
+ * If process is cancelled, 'Date' is once again displayed
+ */
 async function showDateDialog() {
   const {date} = await DateDialog.open().onClose.promise();
-  $(Button).only('#date').text = date ? `${date.toDateString()}` : 'Date*';
+  $(Button).only('#date').text = date ? `${date.toDateString()}` : 'Date';
 }
 
+/**
+ * Parses Date string to create a more readable format
+ * 
+ * @param {String} rawString
+ * 
+ * TODO:
+ *   Re-implement
+ *   Debug issues with initial parse
+ */
 function parseDate(rawString) {
   var dateParts = [rawString.substring(0, 3), rawString.substring(4, 7), rawString.substring(8, 10), rawString(11)];
 
@@ -142,12 +178,27 @@ function parseDate(rawString) {
   return dateParts[0] + dateParts[1] + dateParts[2] + ', ' + dateParts[3];
 }
 
+/**
+ * Displays dialog prompting for a valid time
+ * 
+ * If process is completed, selected time is displayed
+ * If process is cancelled, display is not changed
+ * 
+ * TODO:
+ *   Debug setting text when cancelled/'false'
+ */
 async function showTimeDialog() {
   const {date} = await TimeDialog.open().onClose.promise();
   var time = parseTime(date.toTimeString());
-  $(Button).only('#time').text = date ? time : 'Time*';
+  $(Button).only('#time').text = date ? time : 'Time';
 }
 
+/**
+ * Parses Time string to create a more readable format
+ *   HH:MM AM/PM
+ * 
+ * @param {String} rawString
+ */
 function parseTime(rawString) {
   var timeString = '';
   var colonCount = 0;
@@ -178,7 +229,16 @@ function parseTime(rawString) {
   return timeString;
 }
 
-// Basic validation for when the submit button is pressed
+/**
+ * Provides basic data validation for the fields
+ *   on the page
+ * 
+ * TODO:
+ *   Provide proper follow-up once the data is
+ *     determined to be valid
+ *   Refactor data validation to provide more valid
+ *     checks/make more secure once connected to DB
+ */
 function createEvent() {
   var promptBoolean = false;
   var field = $(TextInput).only('#title');

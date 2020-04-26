@@ -1,3 +1,11 @@
+/**
+ * Calendar Page
+ * 
+ * TODO:
+ *   Add functionality to show events when a day is tapped
+ *   Add functionality to change months (and years?)
+ */
+
 import {TextView, CollectionView, Slider, contentView, Page, TabFolder, Tab, NavigationView} from 'tabris';
 import {MainPage} from './index';
 import {AccountPage} from './account';
@@ -13,6 +21,11 @@ var date = new Date();
 
 const items = createItems();
 
+/**
+ * Creates a Page object to allow use throughout the project
+ * 
+ * Most useful for connecting pages in the app
+ */
 export class CalendarPage extends Page {
   constructor(properties) {
     super();
@@ -51,6 +64,9 @@ export class CalendarPage extends Page {
   }
 }
 
+/**
+ * Create CollectionView cell, set formatting
+ */
 function createCell() {
   return new TextView({
     font: {size: 16, weight: 'bold'},
@@ -61,6 +77,8 @@ function createCell() {
 }
 
 /**
+ * Populate CollectionView cell with data
+ * 
  * @param {TextView} cell
  * @param {number} index
  */
@@ -72,6 +90,17 @@ function updateCell(cell, index) {
   }
 }
 
+/**
+ * Create array to represent days of the month
+ * 
+ * First for loop is used to create indexes with
+ *   no real data to start the month on the
+ *   correct day of the week
+ * 
+ * TODO
+ *   Refactor first day alignment to not rely on
+ *     data-less indexes, if possible
+ */
 function createItems() {
   const result = [];
   var firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
@@ -85,6 +114,13 @@ function createItems() {
   return result;
 }
 
+/**
+ * Opens the Main/Events page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openMainPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -93,6 +129,13 @@ function openMainPage() {
   );
 }
 
+/**
+ * Opens the Contact Us page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openContactPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -101,6 +144,13 @@ function openContactPage() {
   );
 }
 
+/**
+ * Opens the Account Details page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openAccountPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();

@@ -1,3 +1,10 @@
+/**
+ * Display Notifications for Events
+ * 
+ * TODO:
+ *   Refactor to display in sidebar/drawer, if possible
+ */
+
 import {Button, TextView, contentView, AlertDialog, TextInput, Row, CollectionView, 
         TabFolder, Tab, ImageView, Stack, Page, NavigationView, ListView, Cell, Action, 
         SearchAction, ScrollView, Composite

@@ -1,3 +1,12 @@
+/**
+ * Account Details Page
+ * 
+ * TODO:
+ *   Add options to main Account page
+ *   Add suboptions to each option from Account page
+ *     'Directory'-esque setup
+ */
+
 import {TextView, ScrollView, Stack, StackLayout, contentView, Page, TabFolder, Tab, NavigationView, Composite, TextInput, CheckBox, Button, AlertDialog, RowLayout, Popover} from 'tabris';
 import {MainPage} from './index';
 import {CalendarPage} from './calendar-john';
@@ -7,6 +16,11 @@ import {SignUpPage} from './sign-up';
 
 const items = ['[Profile Image]', 'Edit Preferences', 'Account Settings', 'Log Out'];
 
+/**
+ * Creates a Page object to allow use throughout the project
+ * 
+ * Most useful for connecting pages in the app
+ */
 export class AccountPage extends Page {
   constructor(properties) {
     super();
@@ -49,6 +63,13 @@ export class AccountPage extends Page {
   }
 }
 
+/**
+ * Opens the Main/Events page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openMainPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -57,6 +78,13 @@ function openMainPage() {
   );
 }
 
+/**
+ * Opens the Calendar page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openCalendarPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -65,6 +93,13 @@ function openCalendarPage() {
   );
 }
 
+/**
+ * Opens the Contact Us page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openContactPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -73,6 +108,13 @@ function openContactPage() {
   );
 }
 
+/**
+ * Logs the user out, redirecting back to original Popover
+ * 
+ * Prompts user for confirmation, function is asynchronous
+ *   out of necessity; actions following the prompt depend
+ *   entirely on user's response
+ */
 async function logOut() {
   const dialog = AlertDialog.open(
     <AlertDialog title='Log Out' message={'Are you sure you want to log out?'} buttons={{ok: 'Yes', cancel: 'No'}}/>
@@ -84,6 +126,12 @@ async function logOut() {
   }
 }
 
+/**
+ * Opens the initial welcoming Popover
+ * 
+ * Essentially a splash screen with options to either
+ *   sign up or sign in
+ */
 function showLanding() {
   const popover = Popover.open(
     <Popover>
@@ -92,8 +140,6 @@ function showLanding() {
         <ScrollView top background='#234' stretchX height={72} direction='horizontal' layout={new RowLayout({alignment: 'stretchY'})}>
           <TextView left textColor='white' font='bold 35px'>  Spokinetic    </TextView>
           <Button style='text' textColor='white' left={16} font='bold 14px' onSelect={() => showSignIn(popover)}>SIGN IN</Button>
-          {/*<TextView textColor='white'> | </TextView>
-          <Button style='text' textColor='white' font='bold 14px' onSelect={() => showSignUp(popover)}>SIGN UP</Button>*/}
         </ScrollView>
             
         <TextView centerX top={60} textColor='white' font='bold 40px'>Welcome!</TextView>
@@ -108,7 +154,19 @@ function showLanding() {
     </Popover>
   );
 }
-  
+
+/**
+ * Opens a Sign-Up page
+ * 
+ * @param {Popover} popover
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic', without this call the main app
+ *   can be accessed without an account
+ * 
+ * The toolbar is removed to further enforce this
+ */
 function showSignUp(popover) {
   popover.close();
   const navigationView = $(NavigationView).only();
@@ -118,7 +176,19 @@ function showSignUp(popover) {
   );
   navigationView.set({toolbarVisible: false});
 }
-  
+ 
+/**
+ * Opens a Sign-In page
+ * 
+ * @param {Popover} popover
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic', without this call the main app
+ *   can be accessed without an account
+ * 
+ * The toolbar is removed to further enforce this
+ */
 function showSignIn(popover) {
   popover.close();
   const navigationView = $(NavigationView).only();

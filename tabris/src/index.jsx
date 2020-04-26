@@ -1,3 +1,13 @@
+/**
+ * Main Page / Events Page
+ * 
+ * TODO:
+ *   Refactor process to check if user is already signed in
+ *     (Make sign-in persistent between runs)
+ *   Implement link to events notifications (perhaps use sidebar/drawer?)
+ *   Refactor project: move all other .jsx page files to /pages directory
+ */
+
 import {Button, TextView, contentView, AlertDialog, TextInput, Row, CollectionView, 
         TabFolder, Tab, ImageView, Stack, Page, NavigationView, ListView, Cell, Action, 
         SearchAction, ScrollView, Composite, drawer, Popover, StackLayout, RowLayout
@@ -5,7 +15,7 @@ import {Button, TextView, contentView, AlertDialog, TextInput, Row, CollectionVi
 import {CreateEventPage} from './create-event';
 import {SignUpPage} from './sign-up';
 import {SignInPage} from './sign-in';
-import {EventNotifyPage} from './eventsNotificationPage';
+//import {EventNotifyPage} from './eventsNotificationPage';
 import {CalendarPage} from './calendar-john';
 import {AccountPage} from './account';
 import {EventPage} from './eventPage';
@@ -35,6 +45,11 @@ var pThreeString = 'Obstacle Courses';
 const searchString = '';
 var eventNotifyInt = 0;
 
+/**
+ * Creates a Page object to allow use throughout the project
+ * 
+ * Most useful for connecting pages in the app
+ */
 export class MainPage extends Page {
   constructor(properties) {
     super();
@@ -123,20 +138,31 @@ const pageRef = $(Page).only();
 
 checkShowLanding();
 
+/**
+ * Checks if user is already signed in
+ */
 function checkShowLanding(){
   if(!signedInBoolean) {
     showLanding();
   }
 }
 
-// Opens "Create New Event" page
+/**
+ * Opens "Create New Event" page
+ */ 
 function openCreatePage() {
   $(NavigationView).only().append(
     <CreateEventPage />
   );
 }
 
-// Opens a Calendar page
+/**
+ * Opens a Calendar page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openCalendarPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -145,7 +171,13 @@ function openCalendarPage() {
   );
 }
 
-// Opens a Contact page
+/**
+ * Opens a Contact page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openContactPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -154,7 +186,13 @@ function openContactPage() {
   );
 }
 
-// Opens Account Details page
+/**
+ * Opens an Account Details page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openAccountPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -163,6 +201,9 @@ function openAccountPage() {
   );
 }
 
+/**
+ * Opens an Event page
+ */
 function openEventPage() {
   $(NavigationView).only().append(
     <EventPage />
@@ -206,7 +247,18 @@ function showLanding() {
   );
 }
 
-
+/**
+ * Opens a Sign-Up page
+ * 
+ * @param {Popover} popover
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic', without this call the main app
+ *   can be accessed without an account
+ * 
+ * The toolbar is removed to further enforce this
+ */
 function showSignUp(popover) {
   popover.close();
   const navigationView = $(NavigationView).only();
@@ -217,6 +269,18 @@ function showSignUp(popover) {
   navigationView.set({toolbarVisible: false});
 }
 
+/**
+ * Opens a Sign-In page
+ * 
+ * @param {Popover} popover
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic', without this call the main app
+ *   can be accessed without an account
+ * 
+ * The toolbar is removed to further enforce this
+ */
 function showSignIn(popover) {
   popover.close();
   const navigationView = $(NavigationView).only();
@@ -226,8 +290,17 @@ function showSignIn(popover) {
   );
   navigationView.set({toolbarVisible: false});
 }
-/*
-function showNotificationPage(popover){
+
+/**
+ * Opens a notifications page
+ * 
+ * Currently not in use
+ * 
+ * TODO:
+ *   Create an EventNotifyPage
+ *   Connect to this page
+ */
+/*function showNotificationPage(popover){
   popover.close();
   $(NavigationView).only().append(
     <EventNotifyPage />
@@ -267,23 +340,7 @@ function handleLoad({target, error}) {
     //text: error ? 'Error' : 'Success'
   }).insertAfter(target);
 }
-/**
- * Add In Later Iteration
- * The onPage methods handle the three main events displayed
- * on the main page. Each onPage method navigates to the event 
- * page associated with the event displayed.
- */
-function onPage1(){
-  
-}
 
-function onPage2(){
-
-}
-
-function onPage3(){
-
-}
 /**
  * Add In Later Iteration
  * Incrementing the badge is currently for proof of concept
@@ -294,18 +351,4 @@ function onPage3(){
 function onEvents(){
   eventNotifyInt ++;
   pageRef.find('#events').first(Tab).badge = eventNotifyInt; // increment badge val
-}
-/**
- * Add In Later Iteration
- * When selected the calendar page will be displayed
- */
-function onCalendar(){
-
-}
-/**
- * Add In Later Iteration
- * When selected personal calendar page will be displayed
- */
-function onMyCalendar(){
-
 }

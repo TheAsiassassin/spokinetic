@@ -1,5 +1,12 @@
+/**
+ * Contact Us Page
+ * 
+ * TODO:
+ *   Add functionality to follow up on successful submission
+ *     Email vs Help Desk Ticket approach
+ */
+
 import {Button, ImageView, TextInput, TextView, contentView, device, Page, NavigationView, Percent, Picker, SearchAction, TabFolder, Tab, ScrollView, StackLayout, CheckBox, AlertDialog, Color, Composite, Popover} from 'tabris';
-import {SignInPage} from './sign-in';
 import {MainPage} from './index';
 import {CalendarPage} from './calendar-john';
 import {AccountPage} from './account';
@@ -9,6 +16,10 @@ var mainContentHeightInt;
 var mainContentHeightPortraitInt;
 var mainContentHeightLandscapeInt;
 
+/**
+ * Establish viewing size so main content doesn't cover up
+ *   navigation tabs at bottom of app
+ */
 if(device.orientation == 'portrait-primary' || device.orientation == 'portrait-secondary') {
   mainContentHeightPortraitInt = (device.screenHeight - 120);
   mainContentHeightLandscapeInt = (device.screenWidth - 85);
@@ -21,6 +32,11 @@ if(device.orientation == 'portrait-primary' || device.orientation == 'portrait-s
 
 device.onOrientationChanged(changeContentHeight);
 
+/**
+ * Creates a Page object to allow use throughout the project
+ * 
+ * Most useful for connecting pages in the app
+ */
 export class ContactPage extends Page {
   constructor(properties) {
     super();
@@ -73,6 +89,10 @@ export class ContactPage extends Page {
   }
 }
 
+/**
+ * Updates main content height when the device is rotated to
+ *   prevent content from covering navigation tabs at bottom
+ */
 function changeContentHeight() {
   if(device.orientation == "portrait-primary" || device.orientation == "portrait-secondary") {
     mainContentHeightInt = mainContentHeightPortraitInt;
@@ -83,6 +103,10 @@ function changeContentHeight() {
   $('#mainContent').set({height: mainContentHeightInt});
 }
 
+/**
+ * Enables or disables TextInput depending on value of
+ *   Picker widget
+ */
 function isOther() {
   if($(Picker).only('#contactType').selectionIndex == 3)
     $(TextInput).only('#otherReason').enabled = true;
@@ -90,25 +114,43 @@ function isOther() {
     $(TextInput).only('#otherReason').enabled = false;
 }
 
-// Opens a Calendar page
+/**
+ * Opens the Calendar page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openCalendarPage() {
-    const navigationView = $(NavigationView).only();
-    navigationView.pages().detach();
-    navigationView.append(
-      <CalendarPage />
-    );
-  }
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <CalendarPage />
+  );
+}
   
-// Opens the Main page
+/**
+ * Opens the Main/Events page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openMainPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
   navigationView.append(
-    <ContactPage />
+    <MainPage />
   );
 }
   
-// Opens Account Details page
+/**
+ * Opens the Account Details page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openAccountPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -117,7 +159,16 @@ function openAccountPage() {
   );
 }
 
-// Basic validation for when the submit button is pressed
+/**
+ * Provides basic data validation for the fields
+ *   on the page
+ * 
+ * TODO:
+ *   Provide proper follow-up once the data is
+ *     determined to be valid
+ *   Refactor data validation to provide more valid
+ *     checks/make more secure once connected to DB
+ */
 function submit() {
   var promptBoolean = false;
   var field = $(TextInput).only('#email');

@@ -1,3 +1,11 @@
+/**
+ * Display event page
+ * 
+ * TODO:
+ *   Connect to DB to dynamically display proper event
+ *     (Use event IDs?)
+ */
+
 import {Button, AlertDialog, Page, NavigationView, SearchAction, Composite, 
         contentView, ImageView, TabFolder, Tab, ScrollView, Stack, statusBar, TextView} from 'tabris';
 
@@ -28,6 +36,11 @@ statusBar.set({
   theme: 'dark'
 });*/
 
+/**
+ * Creates a Page object to allow use throughout the project
+ * 
+ * Most useful for connecting pages in the app
+ */
 export class EventPage extends Page {
   constructor(properties) {
     super();
@@ -76,16 +89,24 @@ export class EventPage extends Page {
 //top of the screen rather than the bottom. Just a design preference, I'm not sure what is better.
 //tabBarLocation='bottom'
 
-//const imageView = $(ImageView).only();
-//const titleContainer = $(Stack).only();
-//const descriptionContainer = $(Composite).only('#descriptionContainer');
+// The following code has been commented out due to an inability to directly access Widgets in the above class
+/*
+const imageView = $(ImageView).only();
+const titleContainer = $(Stack).only();
+const descriptionContainer = $(Composite).only('#descriptionContainer');
 
-//const titleView = $(TextView).only('#title');
-//const quickDescriptionView = $(TextView).only('#quickDescription');
-//const descriptionView = $(TextView).only('#description');
+const titleView = $(TextView).only('#title');
+const quickDescriptionView = $(TextView).only('#quickDescription');
+const descriptionView = $(TextView).only('#description');
 
-//initFields();
+initFields();
+*/
 
+/**
+ * [Insert description]
+ * 
+ * @param {number} height
+ */
 function updateInitialPosition({height}) {
   $(ImageView).only('#eventImage').height = height / 2;
   $(Composite).only('#descriptionContainer').height = height * 1.5;
@@ -96,12 +117,22 @@ function updateInitialPosition({height}) {
   $(Stack).only().top = titleContainerY;
 }
 
+/**
+ * [Insert description]
+ * 
+ * @param {number} offset 
+ */
 function updateCurrentPosition({offset}) {
   $(ImageView).only('#eventImage').transform = {translationY: Math.max(0, offset * 0.4)};
   $(Stack).only().transform = {translationY: Math.max(0, offset - titleContainerY)};
   $(Stack).only().background = primaryColor(calculatetitleContainerOpacity(offset));
 }
 
+/**
+ * [Insert description]
+ * 
+ * @param {number} scrollViewOffsetY 
+ */
 function calculatetitleContainerOpacity(scrollViewOffsetY) {
   const titleContainerDistanceToTop = titleContainerY - scrollViewOffsetY;
   const opacity = 1 - (titleContainerDistanceToTop * (1 - TITLE_VIEW_OPACITY)) / titleContainerY;
@@ -120,10 +151,22 @@ function calculatetitleContainerOpacity(scrollViewOffsetY) {
   $(ImageView).only().image = eventImage;
 }*/
 
+/**
+ * Add In Later Iteration
+ * Search bar has no search functionality
+ * Brings up keyboard and allows input
+ */
 function onSearch(){
 
 }
 
+/**
+ * Opens the Main/Events page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
 function openMainPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -136,7 +179,9 @@ function handleInput(){
 
 }
 
-/* @param {tabris.ImageViewLoadEvent} event */
+/**
+ * @param {tabris.ImageViewLoadEvent} event
+ */
 function handleLoad({target, error}) {
   new TextView({
     centerX: target.centerX, top: [target, 8]
