@@ -1,6 +1,7 @@
 import {TextView, ScrollView, Stack, StackLayout, contentView, Page, TabFolder, Tab, NavigationView, Composite, TextInput, CheckBox, Button, AlertDialog, RowLayout, Popover} from 'tabris';
 import {MainPage} from './index';
 import {CalendarPage} from './calendar-john';
+import {ContactPage} from './contact';
 import {SignInPage} from './sign-in';
 import {SignUpPage} from './sign-up';
 
@@ -18,7 +19,7 @@ export class AccountPage extends Page {
         <Tab title='Calendar' onSelect={() => openCalendarPage()}>
         </Tab>
 
-        <Tab title='My Calendar'>
+        <Tab title='Contact Us' onSelect={() => openContactPage()}>
         </Tab>
 
         <Tab title='My Account'>
@@ -61,6 +62,14 @@ function openCalendarPage() {
   navigationView.pages().detach();
   navigationView.append(
     <CalendarPage />
+  );
+}
+
+function openContactPage() {
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <ContactPage />
   );
 }
 

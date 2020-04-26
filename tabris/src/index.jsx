@@ -9,6 +9,7 @@ import {EventNotifyPage} from './eventsNotificationPage';
 import {CalendarPage} from './calendar-john';
 import {AccountPage} from './account';
 import {EventPage} from './eventPage';
+import {ContactPage} from './contact';
 
 /**
  * Add In Later Iteration
@@ -51,7 +52,7 @@ export class MainPage extends Page {
           <Tab title='Calendar' onSelect={() => openCalendarPage()}>
           </Tab>
 
-          <Tab title='My Calendar'>
+          <Tab title='Contact Us' onSelect={() => openContactPage()}>
           </Tab>
 
           <Tab title='My Account' onSelect={() => openAccountPage()}>
@@ -144,6 +145,16 @@ function openCalendarPage() {
   );
 }
 
+// Opens a Contact page
+function openContactPage() {
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <ContactPage />
+  );
+}
+
+// Opens Account Details page
 function openAccountPage() {
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
