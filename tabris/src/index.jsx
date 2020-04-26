@@ -10,12 +10,12 @@
 
 import {Button, TextView, contentView, AlertDialog, TextInput, Row, CollectionView, 
         TabFolder, Tab, ImageView, Stack, Page, NavigationView, ListView, Cell, Action, 
-        SearchAction, ScrollView, Composite, drawer, Popover, StackLayout, RowLayout
+        SearchAction, ScrollView, Composite, drawer, Popover, StackLayout, RowLayout, device
       } from 'tabris';
 import {CreateEventPage} from './create-event';
 import {SignUpPage} from './sign-up';
 import {SignInPage} from './sign-in';
-//import {EventNotifyPage} from './eventsNotificationPage';
+import {Notifications} from './eventsNotificationPage';
 import {CalendarPage} from './calendar-john';
 import {AccountPage} from './account';
 import {EventPage} from './eventPage';
@@ -130,7 +130,7 @@ contentView.append(
 );
 
 drawer.append(
-  <TextView centerY left={16}>Hello, World! You've found me!</TextView>
+  <Notifications stretchX height={device.screenHeight}/>
 );
 
 const pageRef = $(Page).only(); 

@@ -2,12 +2,13 @@
  * Display Notifications for Events
  * 
  * TODO:
- *   Refactor to display in sidebar/drawer, if possible
+ *   Figure out a way to use the 'hamburger menu' icon to indicate
+ *     notifications (without also manipulating search icon, if possible)
  */
 
 import {Button, TextView, contentView, AlertDialog, TextInput, Row, CollectionView, 
         TabFolder, Tab, ImageView, Stack, Page, NavigationView, ListView, Cell, Action, 
-        SearchAction, ScrollView, Composite
+        SearchAction, ScrollView, Composite, drawer
       } from 'tabris';
 
 
@@ -28,7 +29,7 @@ const magImage = 'images/magGlass.png';
 */
 
 const notifyArray = [
-  {title: 'Cooking Class Canceled', sender:'Jacob\'s Cooking Lessons', time: '12:35'},
+  {title: 'Cooking Class Cancelled', sender:'Jacob\'s Cooking Lessons', time: '12:35'},
   {title: 'Tonight\'s Special Guest: Tom Capaul', sender: 'Coding Club', time: '08:03'},
   {title: 'This is just a spam message', sender: 'Spammer', time: '04:32'},
   {title: 'Royksopp Playing 3/8', sender: 'The Baby Bar', time: 'yesterday'},
@@ -40,64 +41,34 @@ const notifyArray = [
 const searchString = '';
 var eventNotifyInt = notifyArray.length;
 
-contentView.append(
-  <$>
-    
-
-    <NavigationView stretch drawerActionVisible='true' onSelect={onHome}>
-      
-      <SearchAction  id='search'
-      image={magImage}
-      onSelect={onSearch}
-      onInput={handleInput}
-      >
-      </SearchAction>
-      
-
-      <Page title='Spokinetic'>
-
-        <ImageView id='background' center width={100} height={200} opacity={.7}>
+/**
+ * Creates a Page object to allow use throughout the project
+ * 
+ * Most useful for connecting pages in the app
+ */
+export class Notifications extends Composite {
+  constructor(properties) {
+    super();
+    this.set({...properties}).append(
+      <ImageView id='background' center width={100} height={200} opacity={.7}>
         </ImageView>
-            
-        <TabFolder paging stretch selectionIndex={0} tabBarLocation='bottom' >
+    );
+    this.append(
+      <CollectionView
+        stretch
+        itemCount={notifyArray.length}
+        cellHeight={64}
+        createCell={createCell}
+        updateCell={updateCell}>
+      </CollectionView>
+    );
+    this.append(
+      <TextView id='alertTxt' textColor='black' font='20px' centerX centerY/>
+    );
+  }
+}
 
-          <Tab title='Events' id='events' 
-          badge={eventNotifyInt}
-          onSelect={onEvents}>
-          </Tab>
-
-          <Tab title='Calendar'>
-          </Tab>
-
-          <Tab title='MyCalendar'>
-          </Tab>
-
-        </TabFolder>
-
-        <CollectionView
-          stretch
-          itemCount={notifyArray.length}
-          cellHeight={64}
-          createCell={createCell}
-          updateCell={updateCell}>
-        </CollectionView>
-
-        <TabFolder id='alert' paging stretchX height={40} tabBarLocation='hidden'>
-          <Tab>
-            <TextView id='alertTxt' textColor='black' font='20px' centerX centerY>
-            </TextView>
-          </Tab>
-        </TabFolder>
-        
-          
-
-      </Page>
-
-    </NavigationView>
-  </$>
-);
-
-const pageRef = $(Page).only(); 
+//const pageRef = $(Page).only(); 
 //  '$'  is equivalent to 'tabris.contentView.find'  
 
 /**
@@ -107,14 +78,16 @@ const pageRef = $(Page).only();
 function getNotifications(){
 
 }
+
 /*
 * Add In Later Iteration
 * There is no "Home" button.
 * Add in later iterations
 */
-function onHome(){
+/*function onHome(){
   pageRef.find('#initText').first(TextView).text = 'Home Pressed';
-}
+}*/
+
 /*
 * Add In Later Iteration
 * No search functionality is currently available
@@ -123,18 +96,20 @@ function onHome(){
 function onSearch(){
 
 }
+
 /*
 * The following inc/decEvents() are for testing purposes to test badge manipulation
 */
+/*
 function decEvents(){
   eventNotifyInt --;
-  pageRef.find('#events').first(Tab).badge = eventNotifyInt; 
+  $(Tab).only('#events').first(Tab).badge = eventNotifyInt;
 }
 
 function incEvents(){
   eventNotifyInt ++;
-  pageRef.find('#events').first(Tab).badge = eventNotifyInt; 
-}
+  $(Tab).only('#events').first(Tab).badge = eventNotifyInt;
+}*/
 /*
 * Add In Later Iteration
 * onEvents() currently increments the event notifications as a test.
@@ -232,10 +207,12 @@ function handlePanFinished({target, velocityX, translationX}) {
     animateCancel(target);
   }
 }
+
 /**
- * animates a notification sliding out of view
- * @param {} target 
- * @param {*} translationX 
+ * Animation for a notification sliding out of view
+ * 
+ * @param {Widget} target 
+ * @param {number} translationX 
  */
 async function animateDismiss(target, translationX) {
   await target.animate({
@@ -246,19 +223,24 @@ async function animateDismiss(target, translationX) {
   });
   const index = notifyArray.indexOf(target.item);
   notifyArray.splice(index, 1);
-  $(CollectionView).only().remove(index);
+  drawer.find(CollectionView).only().remove(index);
 
-  decEvents();
+  //decEvents();
 
   //push following responsibility to another method called noNotificationUpdate()
-  if($(CollectionView).only().itemCount == 0){
-    pageRef.find('#background').first(ImageView).image=bckgndImage;
+  if(drawer.find(CollectionView).only().itemCount === 0){
+    //drawer.find(ImageView).only('#background').image=bckgndImage;
 
-    pageRef.find('#alert').first(TabFolder).background='#e9e2a9';
-    pageRef.find('#alertTxt').first(TextView).text='No Notifications!';
+    //drawer.find(TextView).only('#alertTxt').background='#e9e2a9';
+    drawer.find(TextView).only('#alertTxt').text='No Notifications!';
   }
 }
 
+/**
+ * Animation to return a notification back to its original position
+ * 
+ * @param {Widget} target 
+ */
 function animateCancel(target) {
   target.animate({transform: {translationX: 0}}, {duration: 200, easing: 'ease-out'});
 }
