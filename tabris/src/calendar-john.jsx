@@ -6,7 +6,7 @@
  *   Add functionality to change months (and years?)
  */
 
-import {TextView, CollectionView, Slider, contentView, Page, TabFolder, Tab, NavigationView} from 'tabris';
+import {TextView, CollectionView, Slider, contentView, Page, TabFolder, Tab, NavigationView, Popover} from 'tabris';
 import {MainPage} from './index';
 import {AccountPage} from './account';
 import {ContactPage} from './contact';
@@ -17,9 +17,19 @@ const months = ["January", "February", "March", "April", "May", "June", "July", 
 // Array to name days of the week based on the value returned by date.getDay()
 //const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+/** @param {tabris.Attributes<TextView>=} attributes */
+const SectionCell = attributes => <TextView background='#79a6e1' textColor='white' font='bold 24px' alignment='centerX' {...attributes}/>;
+
+/** @param {tabris.Attributes<TextView>=} attributes */
+const ItemCell = attributes => <TextView padding={[2, 5]} font='14px' alignment='left' {...attributes}/>;
+
 var date = new Date();
+var month = date.getMonth();
+var day = date.getDate();
+var year = date.getFullYear();
 
 const items = createItems();
+//const events = createEvents();
 
 /**
  * Creates a Page object to allow use throughout the project
@@ -49,12 +59,12 @@ export class CalendarPage extends Page {
     this.append(
       <TabFolder stretchX height={100} background='#234' tabBarLocation='hidden'>
         <Tab>
-          <TextView text={months[date.getMonth()]} textColor='white' font='bold 36px' center />
+          <TextView text={months[month]} textColor='white' font='bold 36px' center />
         </Tab>
       </TabFolder>
     );
     this.append(
-      <CollectionView stretchX top='prev()' bottom={35} padding={12}
+      <CollectionView id='calendar' stretchX top='prev()' bottom={35} padding={12}
         columnCount={7}
         cellHeight={50}
         itemCount={items.length}
@@ -68,12 +78,9 @@ export class CalendarPage extends Page {
  * Create CollectionView cell, set formatting
  */
 function createCell() {
-  return new TextView({
-    font: {size: 16, weight: 'bold'},
-    textColor: '#234',
-    alignment: 'centerX',
-    maxLines: 1
-  });
+  return (
+    <TextView font='bold 16px' textColor='#234' alignment='centerX' maxLines={1} onTap={ev => showEvents($(CollectionView).only().itemIndex(ev.target))}/>
+  );
 }
 
 /**
@@ -84,7 +91,7 @@ function createCell() {
  */
 function updateCell(cell, index) {
   cell.text = `${items[index]}`;
-  if(items[index] === date.getDate()) {
+  if(items[index] === day) {
     cell.background = '#79a6e1';
     cell.textColor = '#ffffff';
   }
@@ -103,8 +110,8 @@ function updateCell(cell, index) {
  */
 function createItems() {
   const result = [];
-  var firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-  var numDays = new Date(date.getFullYear(), date.getMonth()+1, 0).getDate();
+  var firstDay = new Date(year, month, 1).getDay();
+  var numDays = new Date(year, month+1, 0).getDate();
   for (let i = 0; i < firstDay; i++) {
     result.push(' ');
   }
@@ -157,4 +164,54 @@ function openAccountPage() {
   navigationView.append(
     <AccountPage />
   );
+}
+
+function showEvents(index) {
+  const events = createEvents(index);
+  const popover = Popover.open(
+    <Popover>
+      <CollectionView stretch
+        itemCount={events.length}
+        cellType={index => events[index].type}
+        cellHeight={(_, type) => type === 'section' ? 48 : 32}
+        createCell={type => type === 'section' ? SectionCell() : ItemCell()}
+        updateCell={(cell, index) => cell.text = events[index].name}
+        onScroll={handleScroll}/>
+      <SectionCell stretchX height={48} id='floatingSection' text={events[0].name} onTap={() => toCalendar(popover)}/>
+    </Popover>
+  );
+}
+
+/** @param {tabris.CollectionViewScrollEvent<CollectionView<TextView>>} ev */
+function handleScroll({target}) {
+  const splitIndex = target.firstVisibleIndex + 1;
+  const currentSection = events.slice(0, splitIndex).filter(item => item.type === 'section').pop();
+  const nextSection = events.slice(splitIndex).filter(item => item.type === 'section')[0];
+  const nextSectionCell = target.cellByItemIndex(events.indexOf(nextSection));
+  const bounds = nextSectionCell ? nextSectionCell.absoluteBounds : null;
+  /*$('#floatingSection').only(SectionCell).set({
+    text: currentSection ? currentSection.name : events[0].name,
+    transform: bounds ? {translationY: Math.min(bounds.top - bounds.height, 0)} : {}
+  });*/
+}
+
+function createEvents(index) {
+  let itemCount = 1;
+  /** @type {Array<{name: string, type: 'section' | 'item'}>} */
+  const result = [];
+  result.push({name: (month+1) + '/' + items[index] + '/' + year, type: 'section'});
+  for (let j = 1; j <= 2; j++) {
+    if(j === 1)
+      result.push({name: 'My Events', type: 'section'});
+    else
+      result.push({name: 'Other Events', type: 'section'});
+    for (let i = 0; i < 5; i++) {
+      result.push({name: 'Event ' + itemCount++, type: 'item'});
+    }
+  }
+  return result;
+}
+
+function toCalendar(popover) {
+  popover.close();
 }
