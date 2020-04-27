@@ -56,7 +56,7 @@ export class EventPage extends Page {
           <TextView id='title' font='medium 24px' textColor='white' text={titleString}/>
         </Stack>
 
-        <TabFolder paging stretch selectionIndex={0}  >
+        <TabFolder paging stretch selectionIndex={0} tabBarLocation='hidden'  >
           <Tab title='Events' id='events' 
             badge={eventNotifyInt}
             onSelect={() => openMainPage()}>
@@ -69,7 +69,7 @@ export class EventPage extends Page {
           </Tab>
         </TabFolder>
 
-        <TabFolder stretch selectionIndex={0} tabBarLocation='bottom'>
+        <TabFolder stretch selectionIndex={0} tabBarLocation='hidden'>
           <Tab title= 'SPOKINETIC'>
           </Tab>
 

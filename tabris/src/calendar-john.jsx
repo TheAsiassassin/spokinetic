@@ -2,14 +2,16 @@
  * Calendar Page
  * 
  * TODO:
- *   Add functionality to show events when a day is tapped
  *   Add functionality to change months (and years?)
+ *   Add functionality to access full event pages from Popover
  */
 
-import {TextView, CollectionView, Slider, contentView, Page, TabFolder, Tab, NavigationView, Popover} from 'tabris';
+import {TextView, ImageView, CollectionView, Composite, contentView, Page, TabFolder, Tab, NavigationView, Popover, ScrollView, Stack} from 'tabris';
 import {MainPage} from './index';
 import {AccountPage} from './account';
 import {ContactPage} from './contact';
+
+var popover;
 
 // Array to name months based on the value returned by date.getMonth()
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -27,6 +29,7 @@ var date = new Date();
 var month = date.getMonth();
 var day = date.getDate();
 var year = date.getFullYear();
+var firstDayOfMonth = new Date(year, month, 1).getDay();
 
 const items = createItems();
 //const events = createEvents();
@@ -79,7 +82,7 @@ export class CalendarPage extends Page {
  */
 function createCell() {
   return (
-    <TextView font='bold 16px' textColor='#234' alignment='centerX' maxLines={1} onTap={ev => showEvents($(CollectionView).only().itemIndex(ev.target))}/>
+    <TextView font='bold 16px' textColor='#234' alignment='centerX' maxLines={1} highlightOnTouch onTap={ev => showEvents($(CollectionView).only().itemIndex(ev.target))}/>
   );
 }
 
@@ -166,20 +169,31 @@ function openAccountPage() {
   );
 }
 
+/**
+ * Displays Popover to show list of events
+ * 
+ * @param {number} index 
+ */
 function showEvents(index) {
-  const events = createEvents(index);
-  const popover = Popover.open(
-    <Popover>
-      <CollectionView stretch
-        itemCount={events.length}
-        cellType={index => events[index].type}
-        cellHeight={(_, type) => type === 'section' ? 48 : 32}
-        createCell={type => type === 'section' ? SectionCell() : ItemCell()}
-        updateCell={(cell, index) => cell.text = events[index].name}
-        onScroll={handleScroll}/>
-      <SectionCell stretchX height={48} id='floatingSection' text={events[0].name} onTap={() => toCalendar(popover)}/>
-    </Popover>
-  );
+  if(index >= firstDayOfMonth) {
+    const events = createEvents(index);
+    popover = Popover.open(
+      <Popover>
+        <NavigationView stretch toolbarVisible={false}>
+          <Page>
+            <CollectionView stretch
+              itemCount={events.length}
+              cellType={index => events[index].type}
+              cellHeight={(_, type) => type === 'section' ? 48 : 32}
+              createCell={type => type === 'section' ? SectionCell() : ItemCell()}
+              updateCell={(cell, index) => cell.text = events[index].name}
+              onScroll={handleScroll}/>
+            <SectionCell stretchX height={48} id='floatingSection' text={events[0].name} onTap={() => toCalendar(popover)}/>
+          </Page>
+        </NavigationView>
+      </Popover>
+    );
+  }
 }
 
 /** @param {tabris.CollectionViewScrollEvent<CollectionView<TextView>>} ev */
@@ -195,6 +209,11 @@ function handleScroll({target}) {
   });*/
 }
 
+/**
+ * Creates array of events to display in Popover
+ * 
+ * @param {number} index 
+ */
 function createEvents(index) {
   let itemCount = 1;
   /** @type {Array<{name: string, type: 'section' | 'item'}>} */
@@ -212,6 +231,11 @@ function createEvents(index) {
   return result;
 }
 
+/**
+ * Closes Popover to return to Calendar
+ * 
+ * @param {Popover} popover 
+ */
 function toCalendar(popover) {
   popover.close();
 }
