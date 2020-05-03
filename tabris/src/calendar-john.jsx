@@ -10,6 +10,7 @@ import {TextView, ImageView, CollectionView, Composite, contentView, Page, TabFo
 import {MainPage} from './index';
 import {AccountPage} from './account';
 import {ContactPage} from './contact';
+import {EventPage} from './eventPage';
 
 var popover;
 
@@ -18,12 +19,6 @@ const months = ["January", "February", "March", "April", "May", "June", "July", 
 
 // Array to name days of the week based on the value returned by date.getDay()
 //const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-/** @param {tabris.Attributes<TextView>=} attributes */
-const SectionCell = attributes => <TextView background='#79a6e1' textColor='white' font='bold 24px' alignment='centerX' {...attributes}/>;
-
-/** @param {tabris.Attributes<TextView>=} attributes */
-const ItemCell = attributes => <TextView padding={[2, 5]} font='14px' alignment='left' {...attributes}/>;
 
 var date = new Date();
 var month = date.getMonth();
@@ -196,6 +191,12 @@ function showEvents(index) {
   }
 }
 
+/** @param {tabris.Attributes<TextView>=} attributes */
+const SectionCell = attributes => <TextView background='#79a6e1' textColor='white' font='bold 24px' alignment='centerX' {...attributes}/>;
+
+/** @param {tabris.Attributes<TextView>=} attributes */
+const ItemCell = attributes => <TextView padding={[2, 5]} font='14px' alignment='left' highlightOnTouch onTap={() => toEvents(popover)} {...attributes}/>;
+
 /** @param {tabris.CollectionViewScrollEvent<CollectionView<TextView>>} ev */
 function handleScroll({target}) {
   const splitIndex = target.firstVisibleIndex + 1;
@@ -238,4 +239,11 @@ function createEvents(index) {
  */
 function toCalendar(popover) {
   popover.close();
+}
+
+function toEvents(popover) {
+  popover.close();
+  $(NavigationView).only().append(
+    <EventPage />
+  );
 }
