@@ -47,7 +47,7 @@ export class AccountPage extends Page {
         <Tab>
           <ScrollView stretch layout={new StackLayout({spacing: 16, alignment: 'stretchX'})} padding={12}>
             <Composite background='linear-gradient(0deg, #0288d1 10%, #00dfff)' height={160} padding={16}>
-              <ImageView image='images/concert.jpg' height={96} width={96} centerX cornerRadius={48} scaleMode='fill'/>
+              <ImageView image='images/Spokinetic_imgLogo.png' height={96} width={96} centerX cornerRadius={48} scaleMode='fill'/>
               <TextView text='@Spokinetic' font='bold 16px' top='prev() 12' centerX textColor='white'/>
             </Composite>
             <Composite elevation={4}>
