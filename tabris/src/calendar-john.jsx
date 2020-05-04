@@ -2,8 +2,8 @@
  * Calendar Page
  * 
  * TODO:
- *   Add functionality to change months (and years?)
- *   Add functionality to access full event pages from Popover
+ *   Add functionality to change years(?)
+ *   Consider alternative approaches to make month view updates snappier
  */
 
 import {TextView, ImageView, CollectionView, Composite, contentView, Page, TabFolder, Tab, NavigationView, Popover, ScrollView, Stack} from 'tabris';
@@ -157,7 +157,7 @@ function createCell() {
  */
 function updateCell(cell, index) {
   cell.text = `${items[index]}`;
-  if(items[index] === day) {
+  if($(TabFolder).only('#view-month').selectionIndex === month && items[index] === day) {
     cell.background = '#79a6e1';
     cell.textColor = '#ffffff';
   }
@@ -290,7 +290,7 @@ function createEvents(index) {
   let itemCount = 1;
   /** @type {Array<{name: string, type: 'section' | 'item'}>} */
   const result = [];
-  result.push({name: (month+1) + '/' + items[index] + '/' + year, type: 'section'});
+  result.push({name: ($(TabFolder).only('#view-month').selectionIndex+1) + '/' + items[index] + '/' + year, type: 'section'});
   for (let j = 1; j <= 2; j++) {
     if(j === 1)
       result.push({name: 'My Events', type: 'section'});
