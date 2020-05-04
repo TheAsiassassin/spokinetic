@@ -7,12 +7,13 @@
  *     'Directory'-esque setup
  */
 
-import {TextView, ScrollView, Stack, StackLayout, contentView, Page, TabFolder, Tab, NavigationView, Composite, TextInput, CheckBox, Button, AlertDialog, RowLayout, Popover} from 'tabris';
+import {TextView, ScrollView, Stack, StackLayout, contentView, Page, TabFolder, Tab, NavigationView, Composite, TextInput, CheckBox, Button, AlertDialog, RowLayout, Popover, ImageView} from 'tabris';
 import {MainPage} from './index';
 import {CalendarPage} from './calendar-john';
 import {ContactPage} from './contact';
 import {SignInPage} from './sign-in';
 import {SignUpPage} from './sign-up';
+import {AccountMenu} from './account-menu';
 
 const items = ['[Profile Image]', 'Edit Preferences', 'Account Settings', 'Log Out'];
 
@@ -45,12 +46,16 @@ export class AccountPage extends Page {
       <TabFolder id='mainContent' stretchX height={450} tabBarLocation='hidden'>
         <Tab>
           <ScrollView stretch layout={new StackLayout({spacing: 16, alignment: 'stretchX'})} padding={12}>
+            <Composite background='linear-gradient(0deg, #0288d1 10%, #00dfff)' height={160} padding={16}>
+              <ImageView image='images/concert.jpg' height={96} width={96} centerX cornerRadius={48} scaleMode='fill'/>
+              <TextView text='@Spokinetic' font='bold 16px' top='prev() 12' centerX textColor='white'/>
+            </Composite>
             <Composite elevation={4}>
               <Button stretchX background='white'/>
               <Button left left={4} background='white' textColor='#234' text='Edit Event Preferences'/>
               <Button right right={8} background='white' textColor='#aaa' text='>'/>
             </Composite>
-            <Composite elevation={4}>
+            <Composite elevation={4} onTap={() => toAccountMenu()}>
               <Button stretchX background='white'/>
               <Button left left={4} background='white' textColor='#234' text='Account Settings'/>
               <Button right right={8} background='white' textColor='#aaa' text='>'/>
@@ -105,6 +110,15 @@ function openContactPage() {
   navigationView.pages().detach();
   navigationView.append(
     <ContactPage />
+  );
+}
+
+/**
+ * Navigate to Account submenu
+ */
+function toAccountMenu() {
+  $(NavigationView).only().append(
+    <AccountMenu />
   );
 }
 

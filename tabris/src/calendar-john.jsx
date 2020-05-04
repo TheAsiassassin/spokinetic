@@ -106,20 +106,9 @@ export class CalendarPage extends Page {
   }
 }
 
-function getPrevMonth() {
-  if(month === 0)
-    return 11;
-  else
-    return month - 1;
-}
-
-function getNextMonth() {
-  if(month === 11)
-    return 0;
-  else
-    return month + 1;
-}
-
+/**
+ * Updates calendar view to display selected month
+ */
 function updateCalendar() {
   if(!firstLoadIn) {
     //console.log($(TabFolder).only('#view-month').selectionIndex);
@@ -312,6 +301,11 @@ function toCalendar(popover) {
   popover.close();
 }
 
+/**
+ * Closes Popover to show event details
+ * 
+ * @param {Popover} popover 
+ */
 function toEvents(popover) {
   popover.close();
   $(NavigationView).only().append(
