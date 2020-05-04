@@ -13,6 +13,7 @@ import {ContactPage} from './contact';
 import {EventPage} from './eventPage';
 
 var popover;
+var firstLoadIn = true;
 
 // Array to name months based on the value returned by date.getMonth()
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -26,7 +27,7 @@ var day = date.getDate();
 var year = date.getFullYear();
 var firstDayOfMonth = new Date(year, month, 1).getDay();
 
-const items = createItems();
+var items = createItems(year, month);
 //const events = createEvents();
 
 /**
@@ -55,9 +56,42 @@ export class CalendarPage extends Page {
       </TabFolder>
     );
     this.append(
-      <TabFolder stretchX height={100} background='#234' tabBarLocation='hidden'>
+      <TabFolder id='view-month' paging selectionIndex={month} stretchX height={100} background='#234' tabBarLocation='hidden' onSelectionIndexChanged={() => updateCalendar()}>
         <Tab>
-          <TextView text={months[month]} textColor='white' font='bold 36px' center />
+          <TextView text={months[0]} textColor='white' font='bold 36px' center />
+        </Tab>
+        <Tab>
+          <TextView text={months[1]} textColor='white' font='bold 36px' center />
+        </Tab>
+        <Tab>
+          <TextView text={months[2]} textColor='white' font='bold 36px' center />
+        </Tab>
+        <Tab>
+          <TextView text={months[3]} textColor='white' font='bold 36px' center />
+        </Tab>
+        <Tab>
+          <TextView text={months[4]} textColor='white' font='bold 36px' center />
+        </Tab>
+        <Tab>
+          <TextView text={months[5]} textColor='white' font='bold 36px' center />
+        </Tab>
+        <Tab>
+          <TextView text={months[6]} textColor='white' font='bold 36px' center />
+        </Tab>
+        <Tab>
+          <TextView text={months[7]} textColor='white' font='bold 36px' center />
+        </Tab>
+        <Tab>
+          <TextView text={months[8]} textColor='white' font='bold 36px' center />
+        </Tab>
+        <Tab>
+          <TextView text={months[9]} textColor='white' font='bold 36px' center />
+        </Tab>
+        <Tab>
+          <TextView text={months[10]} textColor='white' font='bold 36px' center />
+        </Tab>
+        <Tab>
+          <TextView text={months[11]} textColor='white' font='bold 36px' center />
         </Tab>
       </TabFolder>
     );
@@ -70,6 +104,40 @@ export class CalendarPage extends Page {
         updateCell={updateCell}/>
     );
   }
+}
+
+function getPrevMonth() {
+  if(month === 0)
+    return 11;
+  else
+    return month - 1;
+}
+
+function getNextMonth() {
+  if(month === 11)
+    return 0;
+  else
+    return month + 1;
+}
+
+function updateCalendar() {
+  if(!firstLoadIn) {
+    //console.log($(TabFolder).only('#view-month').selectionIndex);
+    items = createItems(year, $(TabFolder).only('#view-month').selectionIndex);
+    $(CollectionView).only('#calendar').detach();
+    $(Page).only().append(
+      <CollectionView id='calendar' stretchX top='prev()' bottom={35} padding={12}
+        columnCount={7}
+        cellHeight={50}
+        itemCount={items.length}
+        createCell={createCell}
+        updateCell={updateCell}/>
+    );
+  } else
+    firstLoadIn = false;
+  /*const viewMonth = $(TabFolder).only('#view-month');
+  month = viewMonth.selectionIndex;
+  viewMonth.children().dispose();*/
 }
 
 /**
@@ -106,7 +174,7 @@ function updateCell(cell, index) {
  *   Refactor first day alignment to not rely on
  *     data-less indexes, if possible
  */
-function createItems() {
+function createItems(year, month) {
   const result = [];
   var firstDay = new Date(year, month, 1).getDay();
   var numDays = new Date(year, month+1, 0).getDate();
@@ -127,6 +195,7 @@ function createItems() {
  *   'Spokinetic'
  */
 function openMainPage() {
+  firstLoadIn = true;
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
   navigationView.append(
@@ -142,6 +211,7 @@ function openMainPage() {
  *   'Spokinetic'
  */
 function openContactPage() {
+  firstLoadIn = true;
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
   navigationView.append(
@@ -157,6 +227,7 @@ function openContactPage() {
  *   'Spokinetic'
  */
 function openAccountPage() {
+  firstLoadIn = true;
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
   navigationView.append(
