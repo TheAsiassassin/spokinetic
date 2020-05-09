@@ -6,7 +6,7 @@
  *   Consider alternative approaches to make month view updates snappier
  */
 
-import {TextView, ImageView, CollectionView, Composite, contentView, Page, TabFolder, Tab, NavigationView, Popover, ScrollView, Stack} from 'tabris';
+import {TextView, CollectionView, Page, TabFolder, Tab, NavigationView, Popover} from 'tabris';
 import {MainPage} from './index';
 import {AccountPage} from './account';
 import {ContactPage} from './contact';
@@ -23,8 +23,10 @@ const months = ["January", "February", "March", "April", "May", "June", "July", 
 
 var date = new Date();
 var month = date.getMonth();
+var viewMonth = month;
 var day = date.getDate();
 var year = date.getFullYear();
+var viewYear = year;
 var firstDayOfMonth = new Date(year, month, 1).getDay();
 
 var items = createItems(year, month);
@@ -56,7 +58,10 @@ export class CalendarPage extends Page {
       </TabFolder>
     );
     this.append(
-      <TabFolder id='view-month' paging selectionIndex={month} stretchX height={100} background='#234' tabBarLocation='hidden' onSelectionIndexChanged={() => updateCalendar()}>
+      <TabFolder id='view-month' paging selectionIndex={viewMonth+1} stretchX height={100} background='#234' tabBarLocation='hidden' onSelectionIndexChanged={() => updateCalendar()}>
+        <Tab>
+          <TextView text={months[11]} textColor='white' font='bold 36px' center />
+        </Tab>
         <Tab>
           <TextView text={months[0]} textColor='white' font='bold 36px' center />
         </Tab>
@@ -93,6 +98,9 @@ export class CalendarPage extends Page {
         <Tab>
           <TextView text={months[11]} textColor='white' font='bold 36px' center />
         </Tab>
+        <Tab>
+          <TextView text={months[0]} textColor='white' font='bold 36px' center />
+        </Tab>
       </TabFolder>
     );
     this.append(
@@ -111,8 +119,30 @@ export class CalendarPage extends Page {
  */
 function updateCalendar() {
   if(!firstLoadIn) {
-    //console.log($(TabFolder).only('#view-month').selectionIndex);
-    items = createItems(year, $(TabFolder).only('#view-month').selectionIndex);
+    const tabFolder = $(TabFolder).only('#view-month');
+    if(tabFolder.selectionIndex === 0) {
+      viewMonth = 11;
+      viewYear--;
+
+      firstLoadIn = true;
+      const navigationView = $(NavigationView).only();
+      navigationView.pages().detach();
+      navigationView.append(
+        <CalendarPage />
+      );
+    } else if(tabFolder.selectionIndex === 13) {
+      viewMonth = 0;
+      viewYear++;
+      
+      firstLoadIn = true;
+      const navigationView = $(NavigationView).only();
+      navigationView.pages().detach();
+      navigationView.append(
+        <CalendarPage />
+      );
+    }
+    
+    items = createItems(viewYear, $(TabFolder).only('#view-month').selectionIndex-1);
     $(CollectionView).only('#calendar').detach();
     $(Page).only().append(
       <CollectionView id='calendar' stretchX top='prev()' bottom={35} padding={12}
@@ -124,9 +154,6 @@ function updateCalendar() {
     );
   } else
     firstLoadIn = false;
-  /*const viewMonth = $(TabFolder).only('#view-month');
-  month = viewMonth.selectionIndex;
-  viewMonth.children().dispose();*/
 }
 
 /**
@@ -146,7 +173,7 @@ function createCell() {
  */
 function updateCell(cell, index) {
   cell.text = `${items[index]}`;
-  if($(TabFolder).only('#view-month').selectionIndex === month && items[index] === day) {
+  if($(TabFolder).only('#view-month').selectionIndex === month+1 && items[index] === day && viewYear === year) {
     cell.background = '#79a6e1';
     cell.textColor = '#ffffff';
   }
@@ -184,6 +211,10 @@ function createItems(year, month) {
  *   'Spokinetic'
  */
 function openMainPage() {
+  viewMonth = month;
+  viewYear = year;
+  $(TabFolder).only('#view-month').selectionIndex = viewMonth+1;
+  updateCalendar();
   firstLoadIn = true;
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -200,6 +231,10 @@ function openMainPage() {
  *   'Spokinetic'
  */
 function openContactPage() {
+  viewMonth = month;
+  viewYear = year;
+  $(TabFolder).only('#view-month').selectionIndex = viewMonth+1;
+  updateCalendar();
   firstLoadIn = true;
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -216,6 +251,10 @@ function openContactPage() {
  *   'Spokinetic'
  */
 function openAccountPage() {
+  viewMonth = month;
+  viewYear = year;
+  $(TabFolder).only('#view-month').selectionIndex = viewMonth+1;
+  updateCalendar();
   firstLoadIn = true;
   const navigationView = $(NavigationView).only();
   navigationView.pages().detach();
@@ -279,7 +318,7 @@ function createEvents(index) {
   let itemCount = 1;
   /** @type {Array<{name: string, type: 'section' | 'item'}>} */
   const result = [];
-  result.push({name: ($(TabFolder).only('#view-month').selectionIndex+1) + '/' + items[index] + '/' + year, type: 'section'});
+  result.push({name: ($(TabFolder).only('#view-month').selectionIndex) + '/' + items[index] + '/' + viewYear, type: 'section'});
   for (let j = 1; j <= 2; j++) {
     if(j === 1)
       result.push({name: 'My Events', type: 'section'});

@@ -2,7 +2,7 @@
  * Profile Settings Page
  * 
  * TODO:
- *   Add functionality to edit profile
+ *   Add functionality to edit profile (requires DB connection to persist)
  *     Each field gets its own page
  *       vs.
  *     All done on this page

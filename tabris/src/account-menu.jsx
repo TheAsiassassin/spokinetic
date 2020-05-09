@@ -2,7 +2,7 @@
  * Account Settings Page
  * 
  * TODO:
- *   Add options to main Account page
+ *   Add options Account Settings page
  *   Add suboptions to each option from Account page
  *     'Directory'-esque setup
  */
