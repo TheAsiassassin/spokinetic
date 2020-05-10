@@ -1,17 +1,16 @@
 /**
- * Interests page to set preferences on first sign-in (possibly to update later, too?)
+ * Interests page to set preferences on initial sign-up (and update from 'My Account' tab)
  * 
  * TODO:
- *   Refactor to use paging through the NavigationView, as the rest of the app has been
- *     set up to do
- *   Debug cell creation for CollectionView
  *   Connect to DB for follow-up to create record of new account
- *   Update INTERESTS array to include a greater number of interests (perhaps connect to DB?)
+ *     Also for updating preferences later in 'My Account'
+ *   Verify INTERESTS array includes a sufficient number of interests
  */
 
-import {$, ImageView, TextView, CollectionView, Slider, contentView, device, Page, NavigationView, SearchAction, TabFolder, Tab, ScrollView, StackLayout} from 'tabris';
+import {TextView, ScrollView, StackLayout, device, Page, TabFolder, Tab, Button, Color} from 'tabris';
 
 const INTERESTS = createItems();
+var SELECTED = initSelected();
 var mainContentHeightInt;
 var mainContentHeightPortraitInt;
 var mainContentHeightLandscapeInt;
@@ -32,39 +31,35 @@ if(device.orientation == 'portrait-primary' || device.orientation == 'portrait-s
 
 device.onOrientationChanged(changeContentHeight);
 
-contentView.append(
-  <$>
-    <NavigationView stretch drawerActionVisible='true'>
-      <SearchAction id='search' message='Search'
-        image={'images/magGlass.png'}>
-      </SearchAction>
-
-      <Page title='Spokinetic'>
-        <ImageView centerX centerY width={800} height={1000} opacity={.7}
-        image={'images/mountain2.jpeg'}
-        scaleMode='fill' />
-
-        <TabFolder paging stretch tabBarLocation='bottom'>
-          <Tab title='Events' id='events' badge={0}></Tab>
-          <Tab title='Calendar'></Tab>
-          <Tab title='My Calendar'></Tab>
-        </TabFolder>
-
-        <CollectionView stretch
-          cellHeight={128}
-          itemCount={INTERESTS.length}
-          createCell={createNewCell}
-          updateCell={updateTheCell}/>
-
-        <TabFolder stretchX height={100} background='#234' tabBarLocation='hidden'>
-          <Tab>
-            <TextView text='SIGN UP' textColor='white' font='40px' centerX centerY />
-          </Tab>
-        </TabFolder>
-      </Page>
-    </NavigationView>
-  </$>
-);
+/**
+ * Creates a Page object to allow use throughout the project
+ * 
+ * Most useful for connecting pages in the app
+ */
+export class InterestsPage extends Page {
+  constructor(properties) {
+    super();
+    this.set({title: 'Event Preferences', ...properties}).append(
+      <ScrollView id='main' top={100} stretch layout={new StackLayout({spacing: 16, alignment: 'stretchX'})} padding={32}/>
+    );
+    for(var i = 0; i < INTERESTS.length; i++) {
+      var idString = 'interest' + i;
+      this.find(ScrollView).only('#main').append(
+        <Button id={idString} font='24px'
+          textColor={SELECTED[i] ? 'white' : '#234'}
+          background={SELECTED[i] ? '#79a6e1' : 'transparent'}
+          stretchX text={INTERESTS[i]} onTap={ev => toggleSelected(ev.target)}/>
+      );
+    }
+    this.append(
+      <TabFolder stretchX height={100} background='#234' tabBarLocation='hidden'>
+        <Tab>
+          <TextView text='INTERESTS' textColor='white' font='40px' centerX centerY />
+        </Tab>
+      </TabFolder>
+    );
+  }
+}
 
 /**
  * Updates main content height when the device is rotated to
@@ -81,43 +76,88 @@ function changeContentHeight() {
 }
 
 /**
- * Create CollectionView cell, set formatting
- */
-function createNewCell() {
-  console.log('creating new cell...')
-  return new TextView({
-    font: {size: 32, weight: 'bold'},
-    textColor: '#555555',
-    alignment: 'centerX',
-    maxLines: 1
-  });
-}
-
-/**
- * Populate CollectionView cell with data
- * 
- * @param {TextView} cell
- * @param {number} index
- */
-function updateTheCell(cell, index) {
-  console.log(index);
-  //cell.text = `${INTERESTS[index]}`;
-}
-
-/**
  * Create array to represent different interests
  * 
  * TODO
- *   Add more/wider variety of interests
+ *   Verify variety of interests
  */
 function createItems() {
   const result = [];
-  // 'hello', 'goodbye', 'testing', 'gaming', 'misc.'
-  result.push('hello');
-  result.push('goodbye');
-  result.push('testing');
-  result.push('gaming');
-  result.push('misc.');
+  result.push('Art');
+  result.push('Baseball');
+  result.push('Basketball');
+  result.push('Bowling');
+  result.push('Breweries');
+  result.push('Camping');
+  result.push('Concerts');
+  result.push('Cooking');
+  result.push('Cycling');
+  result.push('Dancing');
+  result.push('DIY');
+  result.push('Fishing');
+  result.push('Football');
+  result.push('Gaming');
+  result.push('Golf');
+  result.push('Hiking');
+  result.push('Hockey');
+  result.push('Hunting');
+  result.push('Karaoke');
+  result.push('Martial Arts');
+  result.push('Motocross');
+  result.push('Movies');
+  result.push('Museums');
+  result.push('Music');
+  result.push('Nightlife');
+  result.push('Reading');
+  result.push('Restaurants');
+  result.push('Running');
+  result.push('Skiing');
+  result.push('Skydiving');
+  result.push('Snowboarding');
+  result.push('Soccer');
+  result.push('Stand-Up Comedy');
+  result.push('Swimming');
+  result.push('Tennis');
+  result.push('Theatre');
+  result.push('Travel');
+  result.push('Volleyball');
+  result.push('Volunteering');
+  result.push('Wine Tasting');
+  result.push('Working Out');
+  result.push('Yoga');
 
   return result;
+}
+
+/**
+ * Create array indicating selected state
+ * 
+ * TODO:
+ *   Update w/ connection to DB
+ */
+function initSelected() {
+  var select = [];
+  for(var i = 0; i < INTERESTS.length; i++)
+    select.push(false);
+  
+  return select;
+}
+
+/**
+ * Toggles buttons between two colors to indicate selection
+ * 
+ * @param {Button} button 
+ */
+function toggleSelected(button) {
+  var id = button.id.substring(8);
+  
+  if(!SELECTED[id]) {
+    button.textColor = 'white';
+    button.background = '#79a6e1';
+    SELECTED[id] = true;
+  } else {
+    button.textColor = '#234';
+    button.background = 'transparent';
+    SELECTED[id] = false;
+  }
 }

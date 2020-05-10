@@ -14,6 +14,7 @@ import {ContactPage} from './contact';
 import {SignInPage} from './sign-in';
 import {SignUpPage} from './sign-up';
 import {AccountMenu} from './account-menu';
+import {PreferencesMenu} from './preferences-menu';
 
 const items = ['[Profile Image]', 'Edit Preferences', 'Account Settings', 'Log Out'];
 
@@ -50,7 +51,7 @@ export class AccountPage extends Page {
               <ImageView image='images/Spokinetic_imgLogo.png' height={96} width={96} centerX cornerRadius={48} scaleMode='fill'/>
               <TextView text='@Spokinetic' font='bold 16px' top='prev() 12' centerX textColor='white'/>
             </Composite>
-            <Composite elevation={4}>
+            <Composite elevation={4} onTap={() => toPreferencesMenu()}>
               <Button stretchX background='white'/>
               <Button left left={4} background='white' textColor='#234' text='Edit Event Preferences'/>
               <Button right right={8} background='white' textColor='#aaa' text='>'/>
@@ -110,6 +111,15 @@ function openContactPage() {
   navigationView.pages().detach();
   navigationView.append(
     <ContactPage />
+  );
+}
+
+/**
+ * Navigate to Event Preferences submenu
+ */
+function toPreferencesMenu() {
+  $(NavigationView).only().append(
+    <PreferencesMenu />
   );
 }
 

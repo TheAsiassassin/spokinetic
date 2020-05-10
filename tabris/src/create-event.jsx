@@ -13,7 +13,7 @@ var mainContentHeightInt;
 var mainContentHeightPortraitInt;
 var mainContentHeightLandscapeInt;
 
-var defaultButtonColor = new Button().textColor;
+const defaultButtonColor = new Button().textColor;
 
 /**
  * Establish viewing size so main content doesn't cover up
