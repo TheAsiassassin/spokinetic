@@ -50,14 +50,11 @@ contentView.append(
           <Tab title='My Calendar'></Tab>
         </TabFolder>
 
-        <TabFolder id='mainContent' stretchX height={mainContentHeightInt} tabBarLocation='hidden'>
-          <Tab>
-            <ScrollView stretch layout={new StackLayout({spacing: 16, alignment: 'stretchX'})} padding={32}>
-              <TextView top='85' textColor='white'>Blah Blah Blah</TextView>
-              <CollectionView stretch cellHeight={128} itemCount={INTERESTS.length} createCell={createNewCell} updateCell={updateTheCell}/>
-            </ScrollView>
-          </Tab>
-        </TabFolder>
+        <CollectionView stretch
+          cellHeight={128}
+          itemCount={INTERESTS.length}
+          createCell={createNewCell}
+          updateCell={updateTheCell}/>
 
         <TabFolder stretchX height={100} background='#234' tabBarLocation='hidden'>
           <Tab>
