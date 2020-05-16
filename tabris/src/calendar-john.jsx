@@ -2,8 +2,9 @@
  * Calendar Page
  * 
  * TODO:
- *   Add functionality to change years(?)
+ *   Connect to DB for event information
  *   Consider alternative approaches to make month view updates snappier
+ *     Perhaps it's simply a consequence of emulation/stream to dev app?
  */
 
 import {TextView, CollectionView, Page, TabFolder, Tab, NavigationView, Popover, Button} from 'tabris';
@@ -31,6 +32,20 @@ var firstDayOfMonth = new Date(year, month, 1).getDay();
 
 var items = createItems(year, month);
 //const events = createEvents();
+
+/**
+ * Create an array determining which days have events
+ * 
+ * Temporary solution for testing purposes
+ * Will require connection to DB to check for events
+ */
+var hasEvents = [];
+for(var i = 0; i < 31; i++) {
+  if(Math.floor(Math.random() * 10) % 3 === 0)
+    hasEvents.push(true);
+  else
+    hasEvents.push(false);
+}
 
 /**
  * Creates a Page object to allow use throughout the project
@@ -167,22 +182,28 @@ function updateCalendar() {
  */
 function createCell() {
   return (
-    <TextView font='bold 16px' textColor='#234' alignment='centerX' maxLines={1} highlightOnTouch onTap={ev => showEvents($(CollectionView).only().itemIndex(ev.target))}/>
+    <Button font='bold 15px' textColor='#234' style='outline' strokeColor='transparent' highlightOnTouch onTap={ev => showEvents($(CollectionView).only().itemIndex(ev.target))}/>
   );
 }
 
 /**
  * Populate CollectionView cell with data
  * 
- * @param {TextView} cell
+ * @param {Button} cell
  * @param {number} index
  */
 function updateCell(cell, index) {
   cell.text = `${items[index]}`;
+  if(items[index] === ' ')
+    cell.highlightOnTouch = false;
   if($(TabFolder).only('#view-month').selectionIndex === month+1 && items[index] === day && viewYear === year) {
     cell.background = '#79a6e1';
     cell.textColor = '#ffffff';
   }
+  if(hasEvents[index] && items[index] !== ' ')
+    cell.strokeColor='#77c666';
+  else
+    cell.strokeColor='transparent';
 }
 
 /**
@@ -269,10 +290,16 @@ function openAccountPage() {
   );
 }
 
+/**
+ * Updates selection index to previous month
+ */
 function prevMonth() {
   $(TabFolder).only('#view-month').selectionIndex--;
 }
 
+/**
+ * Updates selection index to next month
+ */
 function nextMonth() {
   $(TabFolder).only('#view-month').selectionIndex++;
 }
