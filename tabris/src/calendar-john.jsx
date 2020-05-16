@@ -6,7 +6,7 @@
  *   Consider alternative approaches to make month view updates snappier
  */
 
-import {TextView, CollectionView, Page, TabFolder, Tab, NavigationView, Popover} from 'tabris';
+import {TextView, CollectionView, Page, TabFolder, Tab, NavigationView, Popover, Button} from 'tabris';
 import {MainPage} from './index';
 import {AccountPage} from './account';
 import {ContactPage} from './contact';
@@ -110,6 +110,12 @@ export class CalendarPage extends Page {
         itemCount={items.length}
         createCell={createCell}
         updateCell={updateCell}/>
+    );
+    this.append(
+      <Button height={100} text='⟨' textColor='white' font='bold 36px' background='#234' left highlightOnTouch onTap={() => prevMonth()} />
+    );
+    this.append(
+      <Button height={100} text='⟩' textColor='white' font='bold 36px' background='#234' right highlightOnTouch onTap={() => nextMonth()} />
     );
   }
 }
@@ -261,6 +267,14 @@ function openAccountPage() {
   navigationView.append(
     <AccountPage />
   );
+}
+
+function prevMonth() {
+  $(TabFolder).only('#view-month').selectionIndex--;
+}
+
+function nextMonth() {
+  $(TabFolder).only('#view-month').selectionIndex++;
 }
 
 /**
