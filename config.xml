@@ -9,4 +9,4 @@
   </author>
   <preference name="EnableDeveloperConsole" value="$IS_DEBUG" />
 </widget>
-<plugin name="cordova-plugin-camera" spec="1.0.0" />
+<plugin name="cordova-plugin-camera" spec="^1.0.0" />
