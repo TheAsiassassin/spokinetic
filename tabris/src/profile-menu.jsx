@@ -12,6 +12,7 @@ import {TextView, ScrollView, StackLayout, Page, TabFolder, Tab, NavigationView,
 import {UsernameMenu} from './username-menu';
 import {EmailMenu} from './email-menu';
 import {PasswordMenu} from './password-menu';
+import {PictureMenu} from './picture-menu';
 
 /**
  * Creates a Page object to allow use throughout the project
@@ -41,6 +42,11 @@ export class ProfileMenu extends Page {
               <Button stretchX background='white'/>
               <Button left left={4} background='white' textColor='#234' text='Password'/>
               <TextView right right='next() 4' background='white' textColor='#aaa' font='12px' text='**********' centerY/>
+              <Button right right={8} background='white' textColor='#aaa' text='>'/>
+            </Composite>
+            <Composite elevation={4} onTap={() => toPictureMenu()}>
+              <Button stretchX background='white'/>
+              <Button left left={4} background='white' textColor='#234' text='Profile Picture'/>
               <Button right right={8} background='white' textColor='#aaa' text='>'/>
             </Composite>
           </ScrollView>
@@ -75,4 +81,13 @@ function toPasswordMenu() {
   $(NavigationView).only().append(
     <PasswordMenu />
   )
+}
+
+/**
+ * Navigate to Picture submenu
+ */
+function toPictureMenu() {
+  $(NavigationView).only().append(
+    <PictureMenu />
+  );
 }

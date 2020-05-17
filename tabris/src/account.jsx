@@ -7,7 +7,7 @@
  *     'Directory'-esque setup
  */
 
-import {TextView, ScrollView, Stack, StackLayout, contentView, Page, TabFolder, Tab, NavigationView, Composite, TextInput, CheckBox, Button, AlertDialog, RowLayout, Popover, ImageView} from 'tabris';
+import {TextView, ScrollView, Stack, StackLayout, Page, TabFolder, Tab, NavigationView, Composite, Button, AlertDialog, RowLayout, Popover, ImageView, ActionSheet, ActionSheetItem, Camera} from 'tabris';
 import {MainPage} from './index';
 import {CalendarPage} from './calendar-john';
 import {ContactPage} from './contact';
@@ -48,7 +48,7 @@ export class AccountPage extends Page {
         <Tab>
           <ScrollView stretch layout={new StackLayout({spacing: 16, alignment: 'stretchX'})} padding={12}>
             <Composite background='linear-gradient(0deg, #0288d1 10%, #00dfff)' height={160} padding={16}>
-              <ImageView image='images/Spokinetic_imgLogo.png' height={96} width={96} centerX cornerRadius={48} scaleMode='fill'/>
+              <ImageView id='profile' image='images/Spokinetic_imgLogo.png' height={96} width={96} centerX cornerRadius={48} scaleMode='fill' onTap={() => editProfilePic()}/>
               <TextView text='@Spokinetic' font='bold 16px' top='prev() 12' centerX textColor='white'/>
             </Composite>
             <Composite elevation={4} onTap={() => toPreferencesMenu()}>
@@ -112,6 +112,56 @@ function openContactPage() {
   navigationView.append(
     <ContactPage />
   );
+}
+
+async function editProfilePic() {
+  const actionSheet = ActionSheet.open(
+    <ActionSheet title='Update Profile Picture'>
+      <ActionSheetItem title='Take Picture'/>
+      <ActionSheetItem title='Upload Image'/>
+      <ActionSheetItem title='Cancel' style='cancel'/>
+    </ActionSheet>
+  );
+  const {action} = await actionSheet.onClose.promise();
+  if(action == 'Take Picture')
+    openCamera();
+  else if(action == 'Upload Image')
+    openFilePicker();
+}
+
+function setOptions(srcType) {
+  var options = {
+    quality: 50,
+    destinationType: Camera.DestinationType.FILE_URI,
+    sourceType: srcType,
+    encodingType: Camera.EncodingType.JPEG,
+    mediaType: Camera.MediaType.PICTURE,
+    allowEdit: true,
+    correctOrientation: true
+  }
+  return options;
+}
+
+function openCamera() {
+  var srcType = Camera.PictureSourceType.CAMERA;
+  var options = setOptions(srcType);
+
+  navigator.camera.getPicture(function cameraSuccess(imageUri) {
+    $(ImageView).only('#profile').image = imageUri;
+  }, function cameraError(error) {
+    console.debug("Unable to obtain picture: " + error, "app");
+  }, options);
+}
+
+function openFilePicker() {
+  var srcType = Camera.PictureSourceType.SAVEDPHOTOALBUM;
+  var options = setOptions(srcType);
+  
+  navigator.camera.getPicture(function cameraSuccess(imageUri) {
+    $(ImageView).only('#profile').image = imageUri;
+  }, function cameraError(error) {
+    console.debug("Unable to obtain picture: " + error, "app");
+  }, options);
 }
 
 /**
