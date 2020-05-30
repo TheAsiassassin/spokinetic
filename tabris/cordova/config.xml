@@ -8,5 +8,4 @@
     John Smith
   </author>
   <preference name="EnableDeveloperConsole" value="$IS_DEBUG" />
-  <plugin name="cordova-plugin-camera" spec="1.0.0" />
 </widget>
