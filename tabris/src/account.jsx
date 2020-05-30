@@ -7,7 +7,7 @@
  *     'Directory'-esque setup
  */
 
-import {TextView, ScrollView, Stack, StackLayout, Page, TabFolder, Tab, NavigationView, Composite, Button, AlertDialog, RowLayout, Popover, ImageView, ActionSheet, ActionSheetItem, Camera} from 'tabris';
+import {TextView, ScrollView, Stack, StackLayout, Page, TabFolder, Tab, NavigationView, Composite, Button, AlertDialog, RowLayout, Popover, ImageView, ActionSheet, ActionSheetItem, Camera, app, device, permission, CameraView, Picker} from 'tabris';
 import {MainPage} from './index';
 import {CalendarPage} from './calendar-john';
 import {ContactPage} from './contact';
@@ -17,6 +17,16 @@ import {AccountMenu} from './account-menu';
 import {PreferencesMenu} from './preferences-menu';
 
 const items = ['[Profile Image]', 'Edit Preferences', 'Account Settings', 'Log Out'];
+var pic_popover;
+var cameraIndex = 0;
+
+app.idleTimeoutEnabled = false;
+let camera = device.cameras[0];
+
+permission.withAuthorization('camera',
+  () => camera.active = true,
+  () => console.log('"camera" permission is required.'),
+  (e) => console.error(e));
 
 /**
  * Creates a Page object to allow use throughout the project
@@ -114,54 +124,37 @@ function openContactPage() {
   );
 }
 
-async function editProfilePic() {
-  const actionSheet = ActionSheet.open(
-    <ActionSheet title='Update Profile Picture'>
-      <ActionSheetItem title='Take Picture'/>
-      <ActionSheetItem title='Upload Image'/>
-      <ActionSheetItem title='Cancel' style='cancel'/>
-    </ActionSheet>
+function editProfilePic() {
+  pic_popover = Popover.open(
+    <Popover>
+      <Stack stretch alignment='stretchX' padding={16} spacing={16}>
+        <CameraView top bottom={16} background='#dddddd' camera={camera}/>
+        <Picker message='Camera'
+          itemCount={device.cameras.length}
+          itemText={index => device.cameras[index].position}
+          selectionIndex={cameraIndex}
+          onSelect={cameraSelected}/>
+        <Composite>
+          <Button left text='Cancel' onSelect={() => pic_popover.close()}/>
+          <Button right text='Take Picture' onSelect={updatePicture}/>
+        </Composite>
+      </Stack>
+    </Popover>
   );
-  const {action} = await actionSheet.onClose.promise();
-  if(action == 'Take Picture')
-    openCamera();
-  else if(action == 'Upload Image')
-    openFilePicker();
 }
 
-function setOptions(srcType) {
-  var options = {
-    quality: 50,
-    destinationType: Camera.DestinationType.FILE_URI,
-    sourceType: srcType,
-    encodingType: Camera.EncodingType.JPEG,
-    mediaType: Camera.MediaType.PICTURE,
-    allowEdit: true,
-    correctOrientation: true
-  }
-  return options;
+function cameraSelected({index}) {
+  camera.active = false;
+  cameraIndex = index;
+  camera = device.cameras[index];
+  camera.active = true;
+  pic_popover.contentView.find(CameraView).only().camera = camera;
 }
 
-function openCamera() {
-  var srcType = Camera.PictureSourceType.CAMERA;
-  var options = setOptions(srcType);
-
-  navigator.camera.getPicture(function cameraSuccess(imageUri) {
-    $(ImageView).only('#profile').image = imageUri;
-  }, function cameraError(error) {
-    console.debug("Unable to obtain picture: " + error, "app");
-  }, options);
-}
-
-function openFilePicker() {
-  var srcType = Camera.PictureSourceType.SAVEDPHOTOALBUM;
-  var options = setOptions(srcType);
-  
-  navigator.camera.getPicture(function cameraSuccess(imageUri) {
-    $(ImageView).only('#profile').image = imageUri;
-  }, function cameraError(error) {
-    console.debug("Unable to obtain picture: " + error, "app");
-  }, options);
+async function updatePicture() {
+  const capturedImage = await camera.captureImage({flash: 'auto'});
+  $(ImageView).only('#profile').image = capturedImage.image;
+  pic_popover.close();
 }
 
 /**
