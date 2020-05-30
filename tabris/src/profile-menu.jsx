@@ -44,11 +44,6 @@ export class ProfileMenu extends Page {
               <TextView right right='next() 4' background='white' textColor='#aaa' font='12px' text='**********' centerY/>
               <Button right right={8} background='white' textColor='#aaa' text='>'/>
             </Composite>
-            <Composite elevation={4} onTap={() => toPictureMenu()}>
-              <Button stretchX background='white'/>
-              <Button left left={4} background='white' textColor='#234' text='Profile Picture'/>
-              <Button right right={8} background='white' textColor='#aaa' text='>'/>
-            </Composite>
           </ScrollView>
         </Tab>
       </TabFolder>
@@ -81,13 +76,4 @@ function toPasswordMenu() {
   $(NavigationView).only().append(
     <PasswordMenu />
   )
-}
-
-/**
- * Navigate to Picture submenu
- */
-function toPictureMenu() {
-  $(NavigationView).only().append(
-    <PictureMenu />
-  );
 }

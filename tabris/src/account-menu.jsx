@@ -35,7 +35,7 @@ export class AccountMenu extends Page {
             </Composite>
             <Composite elevation={4}>
               <Button stretchX background='white'/>
-              <Button left left={4} background='white' textColor='#234' text='Privacy'/>
+              <Button left left={4} background='white' textColor='#aaa' text='Privacy'/>
               <Button right right={8} background='white' textColor='#aaa' text='>'/>
             </Composite>
           </ScrollView>

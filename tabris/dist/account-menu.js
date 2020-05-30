@@ -32,7 +32,7 @@ class AccountMenu extends tabris_1.Page {
                         JSX.createElement(tabris_1.Button, { right: true, right: 8, background: 'white', textColor: '#aaa', text: '>' })),
                     JSX.createElement(tabris_1.Composite, { elevation: 4 },
                         JSX.createElement(tabris_1.Button, { stretchX: true, background: 'white' }),
-                        JSX.createElement(tabris_1.Button, { left: true, left: 4, background: 'white', textColor: '#234', text: 'Privacy' }),
+                        JSX.createElement(tabris_1.Button, { left: true, left: 4, background: 'white', textColor: '#aaa', text: 'Privacy' }),
                         JSX.createElement(tabris_1.Button, { right: true, right: 8, background: 'white', textColor: '#aaa', text: '>' }))))));
     }
 }
