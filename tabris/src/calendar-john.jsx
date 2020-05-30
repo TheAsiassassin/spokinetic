@@ -7,11 +7,12 @@
  *     Perhaps it's simply a consequence of emulation/stream to dev app?
  */
 
-import {TextView, CollectionView, Page, TabFolder, Tab, NavigationView, Popover, Button} from 'tabris';
+import {TextView, CollectionView, Page, TabFolder, Tab, NavigationView, Popover, Button, Switch, Composite} from 'tabris';
 import {MainPage} from './index';
 import {AccountPage} from './account';
 import {ContactPage} from './contact';
 import {EventPage} from './eventPage';
+import {ListCalendarPage} from './calendar-steven';
 
 var popover;
 var firstLoadIn = true;
@@ -119,7 +120,7 @@ export class CalendarPage extends Page {
       </TabFolder>
     );
     this.append(
-      <CollectionView id='calendar' stretchX top='prev()' bottom={35} padding={12}
+      <CollectionView id='calendar' stretchX top={100} bottom={100} padding={12}
         columnCount={7}
         cellHeight={50}
         itemCount={items.length}
@@ -131,6 +132,13 @@ export class CalendarPage extends Page {
     );
     this.append(
       <Button height={100} text='⟩' textColor='white' font='bold 36px' background='#234' right highlightOnTouch onTap={() => nextMonth()} />
+    );
+    this.append(
+      <Composite bottom bottom={60} centerX>
+        <TextView left centerY text='Month View'/>
+        <Switch left='prev() 8' onSelect={() => toListView()}/>
+        <TextView left='prev() 8' centerY text='List View'/>
+      </Composite>
     );
   }
 }
@@ -166,7 +174,7 @@ function updateCalendar() {
     items = createItems(viewYear, $(TabFolder).only('#view-month').selectionIndex-1);
     $(CollectionView).only('#calendar').detach();
     $(Page).only().append(
-      <CollectionView id='calendar' stretchX top='prev()' bottom={35} padding={12}
+      <CollectionView id='calendar' stretchX top={100} bottom={100} padding={12}
         columnCount={7}
         cellHeight={50}
         itemCount={items.length}
@@ -302,6 +310,22 @@ function prevMonth() {
  */
 function nextMonth() {
   $(TabFolder).only('#view-month').selectionIndex++;
+}
+
+/**
+ * Updates view to show days/events as a list
+ */
+function toListView() {
+  viewMonth = month;
+  viewYear = year;
+  $(TabFolder).only('#view-month').selectionIndex = viewMonth+1;
+  updateCalendar();
+  firstLoadIn = true;
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <ListCalendarPage />
+  );
 }
 
 /**

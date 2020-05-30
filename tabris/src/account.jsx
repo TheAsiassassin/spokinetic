@@ -124,6 +124,10 @@ function openContactPage() {
   );
 }
 
+/**
+ * Opens a Popover widget containing a CameraView
+ *   to allow users to update their profile picture
+ */
 function editProfilePic() {
   pic_popover = Popover.open(
     <Popover>
@@ -143,6 +147,11 @@ function editProfilePic() {
   );
 }
 
+/**
+ * Updates which camera to use based on index
+ * 
+ * @param {number} index
+ */
 function cameraSelected({index}) {
   camera.active = false;
   cameraIndex = index;
@@ -151,6 +160,10 @@ function cameraSelected({index}) {
   pic_popover.contentView.find(CameraView).only().camera = camera;
 }
 
+/**
+ * Sets the captured image as the user's profile picture
+ *   and closes the Popover
+ */
 async function updatePicture() {
   const capturedImage = await camera.captureImage({flash: 'auto'});
   $(ImageView).only('#profile').image = capturedImage.image;

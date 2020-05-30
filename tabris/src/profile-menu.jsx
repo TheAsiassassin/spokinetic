@@ -12,7 +12,6 @@ import {TextView, ScrollView, StackLayout, Page, TabFolder, Tab, NavigationView,
 import {UsernameMenu} from './username-menu';
 import {EmailMenu} from './email-menu';
 import {PasswordMenu} from './password-menu';
-import {PictureMenu} from './picture-menu';
 
 /**
  * Creates a Page object to allow use throughout the project

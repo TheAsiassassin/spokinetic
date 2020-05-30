@@ -1,4 +1,8 @@
-import {$, NavigationView, Page, SearchAction, CollectionView, contentView, TextView, AlertDialog} from 'tabris';
+import {$, NavigationView, Page, SearchAction, CollectionView, contentView, TextView, AlertDialog, TabFolder, Tab, Composite, Switch} from 'tabris';
+import {MainPage} from './index';
+import {CalendarPage} from './calendar-john';
+import {ContactPage} from './contact';
+import {AccountPage} from './account';
 
 
 var magImage = 'images/magGlass.png';
@@ -30,42 +34,58 @@ const ItemCell = attributes =>
 
 const items = createItems();
 
-contentView.append(
-  <$>
+export class ListCalendarPage extends Page {
+  constructor(properties) {
+    super();
+    this.set({title: 'Calendar', ...properties}).append(
+      <TabFolder paging stretch selectionIndex={1} tabBarLocation='bottom'>
 
-    <NavigationView stretch drawerActionVisible='true'>
-      
-      <SearchAction  id='search'
-      image={magImage}
-      onTap={onHome}>
-      </SearchAction>
+        <Tab title='Events' id='events' onSelect={() => openMainPage()}>
+        </Tab>
 
-      <Page title='Spokinetic'>
-        <TextView>Just for fun</TextView>
-        <CollectionView stretch
-          id='collection'
-          itemCount={items.length}
-          cellType={index => items[index].type}
-          cellHeight={(_, type) => type === 'section' ? 48 : 32}
-          createCell={createCell}
-          updateCell={(cell, index) => cell.text = fillCell(cell, items, index)}       
-          onScroll={handleScroll}
-        />
-        <SectionCell stretchX height={48} 
-          id='floatingSection' 
-          text={items[0].name}/>
-      </Page>
+        <Tab title='Calendar'>
+        </Tab>
 
-    </NavigationView>
-  </$>
-);
+        <Tab title='Contact Us' onSelect={() => openContactPage()}>
+        </Tab>
 
-const pageRef = $(Page).only();  
+        <Tab title='My Account' onSelect={() => openAccountPage()}>
+        </Tab>
+
+      </TabFolder>
+    );
+    this.append(
+      <CollectionView stretchX bottom={100} top
+        id='collection'
+        itemCount={items.length}
+        cellType={index => items[index].type}
+        cellHeight={(_, type) => type === 'section' ? 48 : 32}
+        createCell={createCell}
+        updateCell={(cell, index) => cell.text = fillCell(cell, items, index)}       
+        onScroll={handleScroll}
+      />
+    );
+    this.append(
+      <SectionCell stretchX height={48} 
+        id='floatingSection' 
+        text={items[0].name}/>
+    );
+    this.append(
+      <Composite bottom bottom={60} centerX>
+        <TextView left centerY text='Month View'/>
+        <Switch left='prev() 8' checked onSelect={() => toMonthView()}/>
+        <TextView left='prev() 8' centerY text='List View'/>
+      </Composite>
+    );
+  }
+}
+
+//const pageRef = $(Page).only();  
 
 
 function swipeRight(){
   console.log("Right swipe Working");
-  pageRef.find('#collection').first(CollectionView).updateCell
+  $(CollectionView).only('#collection').updateCell;
 }
 
 function swipeLeft(){
@@ -95,7 +115,7 @@ function  onEvent(){
 }
 
 function onHome(){
-  pageRef.find('#initText').first(TextView).text = 'Home Pressed';
+  $(TextView).only('#initText').text = 'Home Pressed';
 }
 //createCell={type => type === 'section' ? SectionCell() : ItemCell()}
 
@@ -390,7 +410,59 @@ function fillEventArray(){
   
 }
 
+/**
+ * Opens the Main/Events page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
+function openMainPage() {
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <MainPage />
+  );
+}
 
+/**
+ * Opens the Contact Us page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
+function openContactPage() {
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <ContactPage />
+  );
+}
 
+/**
+ * Opens the Account Details page
+ * 
+ * detach() is called to prevent the 'hamburger menu'
+ *   from being replaced by a back button titled
+ *   'Spokinetic'
+ */
+function openAccountPage() {
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <AccountPage />
+  );
+}
 
+/**
+ * Updates view to show days/events as a list
+ */
+function toMonthView() {
+  const navigationView = $(NavigationView).only();
+  navigationView.pages().detach();
+  navigationView.append(
+    <CalendarPage />
+  );
+}
 
